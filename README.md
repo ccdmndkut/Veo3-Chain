@@ -5,12 +5,116 @@ Provides installation, configuration, and usage instructions
 
 # 🎬 Veo3 Short-Form Story Generator
 
-A tool to generate 30-second video stories using Google's Veo3 API by chaining three 8-second clips with consistent characters. Now featuring **state-of-the-art Veo3 prompt optimization** for maximum quality and character consistency.
+A tool to generate 24-second video stories using Google's Veo3 API by chaining three 8-second clips with consistent characters. Now featuring **state-of-the-art Veo3 prompt optimization** for maximum quality and character consistency.
+
+## 🔄 Technical Workflow
+
+The following diagram shows the complete technical process from user input to final video:
+
+```mermaid
+flowchart TD
+    A[User Input] --> B{Character Selection}
+    B --> C[Character Bible Lookup]
+    B --> D[Custom Character Input]
+    C --> E[Story Prompt Input]
+    D --> E
+    
+    E --> F[OpenAI GPT-4 Request]
+    F --> G{JSON Parse Success?}
+    G -->|Yes| H[3 Scene Scripts Generated]
+    G -->|No| I[API-Based JSON Extraction]
+    I --> J{Extraction Success?}
+    J -->|Yes| H
+    J -->|No| K[Fallback Template Scripts]
+    K --> H
+    
+    H --> L[Script Enhancement]
+    L --> M[Add 8-Second Duration]
+    L --> N[Add Character Consistency]
+    L --> O[Add Environment Flow]
+    M --> P[Enhanced Scripts Ready]
+    N --> P
+    O --> P
+    
+    P --> Q[User Script Review & Edit]
+    Q --> R{User Confirms Generation?}
+    R -->|No| Q
+    R -->|Yes| S[Cost Warning Display]
+    S --> T[Video Generation Start]
+    
+    T --> U[Scene 1: Veo3 API Call]
+    T --> V[Scene 2: Veo3 API Call]
+    T --> W[Scene 3: Veo3 API Call]
+    
+    U --> X[Download Scene 1 MP4]
+    V --> Y[Download Scene 2 MP4]
+    W --> Z[Download Scene 3 MP4]
+    
+    X --> AA[FFmpeg Concatenation]
+    Y --> AA
+    Z --> AA
+    
+    AA --> BB[Final 24-Second Video]
+    BB --> CC[Cleanup Temp Files]
+    CC --> DD[Video Ready for Download]
+    
+    subgraph "Character Bible System"
+        C --> CB1[Stormtrooper Details]
+        C --> CB2[Wizard Details]
+        C --> CB3[Detective Details]
+        C --> CB4[Chef Details]
+        C --> CB5[Astronaut Details]
+        C --> CB6[Pirate Details]
+    end
+    
+    subgraph "OpenAI Processing"
+        F --> OA1[System Prompt: Veo3 Optimization Rules]
+        F --> OA2[User Prompt: Character + Story]
+        OA1 --> OA3[GPT-4 Response]
+        OA2 --> OA3
+    end
+    
+    subgraph "Veo3 API Calls"
+        U --> V1[Prompt: 8-second scene with character consistency]
+        V --> V2[Prompt: 8-second scene in same environment]
+        W --> V3[Prompt: 8-second scene with dramatic conclusion]
+        V1 --> V4[fal.ai Veo3 Endpoint]
+        V2 --> V4
+        V3 --> V4
+    end
+    
+    subgraph "Video Processing"
+        AA --> VP1[Input: 3 MP4 files]
+        VP1 --> VP2[FFmpeg Filter Complex]
+        VP2 --> VP3[Concat: n=3:v=1:a=1]
+        VP3 --> VP4[Output: Single MP4]
+    end
+    
+    subgraph "Cost Tracking"
+        U --> CT1[$0.50/second × Scene 1 length]
+        V --> CT2[$0.50/second × Scene 2 length]
+        W --> CT3[$0.50/second × Scene 3 length]
+        CT1 --> CT4[Total Cost: ~$12]
+        CT2 --> CT4
+        CT3 --> CT4
+    end
+    
+    style A fill:#e1f5fe
+    style BB fill:#c8e6c9
+    style DD fill:#4caf50,color:#fff
+    style F fill:#fff3e0
+    style U fill:#fce4ec
+    style V fill:#fce4ec
+    style W fill:#fce4ec
+    style AA fill:#f3e5f5
+```
 
 ## 🎯 Key Features
 
 ### 🔥 NEW: Advanced Veo3 Optimization
 - **Character Bible System**: Detailed character descriptions for perfect consistency
+- **8-Second Scene Timing**: Precise duration control for optimal pacing
+- **Consistent Environment Flow**: Scenes transition smoothly in the same setting
 - **Cinematic Prompt Structure**: Optimized for Veo3's capabilities
 - **Camera Movement Control**: Professional cinematography terms
 - **Audio Integration**: Native sound effects, dialogue, and music
@@ -81,6 +185,13 @@ stormtrooper: {
 }
 ```
 
+### 8-Second Scene Structure
+Each scene follows precise timing:
+- **Duration**: Exactly 8 seconds for optimal pacing
+- **Environment**: Consistent setting across all scenes
+- **Character**: Verbatim character description repetition
+- **Flow**: Logical progression from scene to scene
+
 ### Cinematic Control
 - **Camera Movements**: dolly, pan, tracking, crane shots
 - **Shot Composition**: close-up, medium shot, wide shot, POV
@@ -114,30 +225,34 @@ Veo3-Chain/
 
 1. **Character Selection**: Choose from optimized character presets
 2. **Story Creation**: Enter your story prompt
-3. **Script Generation**: AI creates 3 Veo3-optimized scene scripts
+3. **Script Generation**: AI creates 3 Veo3-optimized 8-second scene scripts
 4. **Script Review & Edit**: Review and edit scripts with optimization tips
-5. **Cost Confirmation**: Confirm $12 generation cost
+5. **Cost Confirmation**: Confirm ~$12 generation cost
 6. **Video Generation**: Generate 3 videos with progress tracking
-7. **Concatenation**: Automatic video stitching
-8. **Download**: Get your 30-second story
+7. **Concatenation**: Automatic video stitching into 24-second story
+8. **Download**: Get your final video
 
 ## 💰 Pricing
 
 - **Script Generation**: ~$0.01 (OpenAI GPT-4)
-- **Video Generation**: $12 (3 × $4 per 8-second Veo3 video)
-- **Total per story**: $12.01
+- **Video Generation**: ~$12 (3 × 8-second videos at $0.50/second)
+- **Total per story**: ~$12.01
 
 ## 🛠 Technical Implementation
 
 ### Script Generation (Enhanced)
 - Character Bible integration
+- 8-second duration constraints
 - Veo3-specific prompt structure
+- Environment consistency detection
 - Camera movement optimization
 - Audio specification
+- API-based JSON extraction
 - Fallback system with optimized templates
 
 ### Video Generation
 - Veo3 API via fal.ai client
+- Precise 8-second scene timing
 - Progress tracking and status updates
 - Error handling with user feedback
 - Cost tracking and logging
@@ -151,6 +266,8 @@ Veo3-Chain/
 
 Our implementation is based on extensive research:
 - **Character Consistency**: Verbatim description repetition
+- **8-Second Timing**: Optimal duration for narrative flow
+- **Environment Flow**: Consistent setting progression
 - **Prompt Structure**: Subject → Context → Action → Camera → Audio
 - **Cinematic Language**: Professional film terminology
 - **Audio Integration**: Native Veo3 audio capabilities
@@ -169,12 +286,13 @@ PORT=3000
 ## 📝 Example Optimized Script
 
 ```
-A classic Imperial Stormtrooper with gleaming white armor plating, distinctive black eye lenses in the helmet, utility belt with equipment pouches, and the iconic angular helmet design stands confidently in a bright, modern environment. Medium shot composition capturing the character from waist up. The character stands with military posture while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue with slight helmet muffling, subtle ambient room tone.
+8-second scene: A classic Imperial Stormtrooper with gleaming white armor plating, distinctive black eye lenses in the helmet, utility belt with equipment pouches, and the iconic angular helmet design stands confidently in a modern tech conference hall. Medium shot composition capturing the character from waist up. The character stands with military posture while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue with authoritative voice slightly muffled by helmet, subtle ambient room tone.
 ```
 
 ## 🚨 Error Handling
 
 - **API Failures**: Fallback to optimized template scripts
+- **JSON Parsing**: API-based extraction for robust parsing
 - **Video Generation Errors**: User feedback and retry options
 - **FFmpeg Issues**: Graceful error messages
 - **Edit Validation**: Real-time script validation
@@ -182,19 +300,23 @@ A classic Imperial Stormtrooper with gleaming white armor plating, distinctive b
 ## 🎯 Best Practices
 
 1. **Character Consistency**: Always use exact character descriptions
-2. **Scene Flow**: Ensure logical narrative progression
-3. **Audio Specification**: Always include audio cues
-4. **Camera Variety**: Use different shots for visual interest
-5. **Cost Awareness**: Review scripts before generation
+2. **8-Second Timing**: Ensure actions fit within 8-second duration
+3. **Environment Flow**: Maintain consistent setting across scenes
+4. **Scene Progression**: Ensure logical narrative flow
+5. **Audio Specification**: Always include audio cues
+6. **Camera Variety**: Use different shots for visual interest
+7. **Cost Awareness**: Review scripts before generation
 
 ## 🔮 Future Enhancements
 
 - [ ] Advanced character editor with visual builder
-- [ ] Style preset library
+- [ ] Custom environment templates
 - [ ] Batch story generation
 - [ ] Quality analytics dashboard
 - [ ] Custom audio library
 - [ ] Advanced camera movement presets
+- [ ] Scene duration customization
+- [ ] Multi-character stories
 
 ## 📚 Documentation
 
