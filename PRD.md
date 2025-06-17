@@ -54,10 +54,11 @@ flowchart TD
 ## 5. Technical Considerations
 
 ### Stack
-- **Node.js** for backend orchestration
+- **Node.js with Express** for backend server and API endpoints
+- **Static HTML/CSS/JavaScript** for simple web UI
 - **@fal-ai/client** for Veo 3 API integration
 - **fluent-ffmpeg** for video concatenation
-- **React/Next.js** for web UI
+- **OpenAI API** for generating scene scripts from user prompts
 
 ### Cost Control
 - **Prompt user before each API call with cost warning**

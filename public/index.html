@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veo3 Story Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .cost-warning {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            animation: pulse 2s infinite;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Purpose: Main web interface for Veo3 Short-Form Story Generator -->
+    
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🎬 Veo3 Story Generator</h1>
+            <p class="text-gray-600">Create 30-second stories with consistent characters using AI</p>
+            <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg">
+                <p class="text-yellow-800">
+                    <strong>⚠️ Cost Warning:</strong> Each story costs <strong>$15</strong> (3 videos × $5 each)
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 1: Character & Prompt Input -->
+        <div id="step1" class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Step 1: Create Your Story</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label for="character" class="block text-sm font-medium text-gray-700 mb-2">
+                        Character
+                    </label>
+                    <select id="character" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select a character...</option>
+                        <option value="stormtrooper">Stormtrooper</option>
+                        <option value="wizard">Wizard</option>
+                        <option value="detective">Detective</option>
+                        <option value="chef">Chef</option>
+                        <option value="astronaut">Astronaut</option>
+                        <option value="pirate">Pirate</option>
+                        <option value="custom">Custom Character</option>
+                    </select>
+                    
+                    <input 
+                        id="customCharacter" 
+                        type="text" 
+                        placeholder="Enter custom character..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden"
+                    >
+                </div>
+                
+                <div>
+                    <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">
+                        Story Prompt
+                    </label>
+                    <textarea 
+                        id="prompt" 
+                        rows="4" 
+                        placeholder="Describe your story idea... (e.g., 'A stormtrooper vlogs their day in three scenes')"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+                </div>
+            </div>
+            
+            <button 
+                id="generateScripts" 
+                class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+            >
+                Generate Scene Scripts
+            </button>
+        </div>
+
+        <!-- Step 2: Script Review -->
+        <div id="step2" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Step 2: Review Your Scripts</h2>
+            <p class="text-gray-600 mb-4">Review the generated scene scripts before proceeding with video generation.</p>
+            
+            <div id="scriptsContainer" class="space-y-4 mb-6">
+                <!-- Scripts will be populated here -->
+            </div>
+            
+            <div class="cost-warning rounded-lg p-4 text-center mb-4">
+                <h3 class="text-xl font-bold text-yellow-900 mb-2">💰 COST CONFIRMATION</h3>
+                <p class="text-yellow-900">
+                    Proceeding will generate 3 videos at <strong>$5 each = $15 total</strong>
+                    <br>This charge will be applied to your fal.ai account immediately.
+                </p>
+            </div>
+            
+            <div class="flex gap-4">
+                <button 
+                    id="confirmGenerate" 
+                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+                >
+                    ⚡ Confirm & Generate Videos ($15)
+                </button>
+                <button 
+                    id="backToEdit" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+                >
+                    ← Back to Edit
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Video Generation Progress -->
+        <div id="step3" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Step 3: Generating Your Story</h2>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Overall Progress</span>
+                    <span id="progressText" class="text-sm text-gray-500">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div id="statusContainer" class="space-y-2">
+                <div id="status1" class="flex items-center text-gray-500">
+                    <span class="loading mr-3 hidden"></span>
+                    <span>Scene 1: Waiting...</span>
+                </div>
+                <div id="status2" class="flex items-center text-gray-500">
+                    <span class="loading mr-3 hidden"></span>
+                    <span>Scene 2: Waiting...</span>
+                </div>
+                <div id="status3" class="flex items-center text-gray-500">
+                    <span class="loading mr-3 hidden"></span>
+                    <span>Scene 3: Waiting...</span>
+                </div>
+                <div id="statusConcat" class="flex items-center text-gray-500">
+                    <span class="loading mr-3 hidden"></span>
+                    <span>Video concatenation: Waiting...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Results -->
+        <div id="step4" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">🎉 Your Story is Ready!</h2>
+            
+            <div class="text-center">
+                <video id="resultVideo" controls class="w-full max-w-md mx-auto mb-4 rounded-lg shadow-lg">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <div class="flex gap-4 justify-center">
+                    <a id="downloadBtn" href="#" download class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        📥 Download Video
+                    </a>
+                    <button id="createAnother" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        🎬 Create Another Story
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-500 text-sm mt-8">
+            <p>Powered by Veo3 API • Built with ❤️ for storytellers</p>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html> 
