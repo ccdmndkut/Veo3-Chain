@@ -5,15 +5,23 @@ Provides installation, configuration, and usage instructions
 
 # 🎬 Veo3 Short-Form Story Generator
 
-Create engaging 30-second video stories with consistent characters using the power of Veo3 AI and intelligent script generation.
+A tool to generate 30-second video stories using Google's Veo3 API by chaining three 8-second clips with consistent characters. Now featuring **state-of-the-art Veo3 prompt optimization** for maximum quality and character consistency.
 
-## ✨ Features
+## 🎯 Key Features
 
-- **Character Consistency**: Maintains character appearance across all scenes
-- **Intelligent Script Generation**: Uses GPT-4 to create compelling 3-scene narratives
-- **Cost-Aware**: Clear cost warnings and confirmations ($15 per story)
-- **Modern Web Interface**: Clean, responsive UI with progress tracking
-- **Video Processing**: Automatically concatenates clips into a single MP4 file
+### 🔥 NEW: Advanced Veo3 Optimization
+- **Character Bible System**: Detailed character descriptions for perfect consistency
+- **Cinematic Prompt Structure**: Optimized for Veo3's capabilities
+- **Camera Movement Control**: Professional cinematography terms
+- **Audio Integration**: Native sound effects, dialogue, and music
+- **Scene Editing**: Edit individual scene scripts with optimization tips
+
+### Core Functionality
+- **Character Selection**: Pre-configured characters with detailed descriptions
+- **Script Generation**: AI-powered scene creation with OpenAI GPT-4
+- **Video Generation**: Veo3 API integration via fal.ai
+- **Video Concatenation**: Seamless FFmpeg-based video stitching
+- **Cost Management**: Clear pricing ($12 per story) with user confirmation
 
 ## 🚀 Quick Start
 
@@ -41,8 +49,8 @@ cp env.example .env
 
 Edit `.env` and add your API keys:
 ```env
-FAL_KEY=your_fal_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here
+FAL_KEY=your_fal_api_key
+OPENAI_API_KEY=your_openai_api_key
 PORT=3000
 ```
 
@@ -61,130 +69,158 @@ npm start    # Production mode
 5. **Open your browser**
 Navigate to `http://localhost:3000`
 
-## 💰 Cost Information
+## 🎨 Veo3 Optimization Features
 
-- **Per Story**: $15 (3 videos × $5 each)
-- **API Provider**: fal.ai (Veo3 API)
-- **Script Generation**: ~$0.01 per story (OpenAI GPT-4)
+### Character Consistency
+Our Character Bible ensures perfect consistency across scenes:
+```javascript
+stormtrooper: {
+    description: "A classic Imperial Stormtrooper with gleaming white armor plating, distinctive black eye lenses in the helmet, utility belt with equipment pouches, and the iconic angular helmet design. The armor shows subtle battle-worn details and reflective surfaces.",
+    voice: "speaks with a clear, authoritative voice slightly muffled by the helmet",
+    mannerisms: "stands with military posture, gestures with precision"
+}
+```
 
-**⚠️ Important**: Real costs are incurred when generating videos. The application provides clear warnings before any API calls.
+### Cinematic Control
+- **Camera Movements**: dolly, pan, tracking, crane shots
+- **Shot Composition**: close-up, medium shot, wide shot, POV
+- **Lighting**: chiaroscuro, golden hour, neon glow
+- **Audio**: Dialogue, SFX, ambient sound, music
 
-## 🎯 Usage
+### Scene Editing
+- Edit button on each scene card
+- Optimization tips in edit modal
+- Real-time script updates
+- Visual feedback on changes
 
-1. **Select Character**: Choose from presets (Stormtrooper, Wizard, etc.) or create custom
-2. **Write Story Prompt**: Describe your story idea in plain English
-3. **Review Scripts**: Generated 3-scene scripts are shown for approval
-4. **Confirm Generation**: Click to proceed with video generation ($15 cost)
-5. **Download Result**: Get your final concatenated MP4 video
-
-### Example Prompts
-
-- "A stormtrooper vlogs their day in three scenes"
-- "A wizard discovers modern technology for the first time"
-- "A detective solves a mystery involving missing cookies"
-
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
 Veo3-Chain/
-├── server.js              # Main Express server
+├── server.js              # Express server
 ├── src/
-│   ├── scriptGenerator.js # OpenAI script generation
+│   ├── scriptGenerator.js # Veo3-optimized script generation
 │   ├── videoGenerator.js  # Veo3 API integration
-│   └── videoProcessor.js  # FFmpeg video concatenation
+│   └── videoProcessor.js  # FFmpeg concatenation
 ├── public/
-│   ├── index.html         # Web interface
-│   └── app.js            # Frontend JavaScript
+│   ├── index.html         # Enhanced UI with edit features
+│   └── app.js             # Advanced frontend with editing
 ├── temp/                  # Temporary video files
-├── output/               # Final video outputs
-└── env.example           # Environment variables template
+├── output/                # Final concatenated videos
+└── VEO3_OPTIMIZATION_GUIDE.md # Comprehensive optimization guide
 ```
 
-## 🔧 API Endpoints
+## 🎬 Workflow
 
-- `GET /` - Web interface
-- `POST /api/generate-scripts` - Generate scene scripts
-- `POST /api/generate-videos` - Generate and concatenate videos
-- `GET /api/health` - Health check
+1. **Character Selection**: Choose from optimized character presets
+2. **Story Creation**: Enter your story prompt
+3. **Script Generation**: AI creates 3 Veo3-optimized scene scripts
+4. **Script Review & Edit**: Review and edit scripts with optimization tips
+5. **Cost Confirmation**: Confirm $12 generation cost
+6. **Video Generation**: Generate 3 videos with progress tracking
+7. **Concatenation**: Automatic video stitching
+8. **Download**: Get your 30-second story
 
-## 🛠️ Development
+## 💰 Pricing
 
-### Running in Development Mode
+- **Script Generation**: ~$0.01 (OpenAI GPT-4)
+- **Video Generation**: $12 (3 × $4 per 8-second Veo3 video)
+- **Total per story**: $12.01
+
+## 🛠 Technical Implementation
+
+### Script Generation (Enhanced)
+- Character Bible integration
+- Veo3-specific prompt structure
+- Camera movement optimization
+- Audio specification
+- Fallback system with optimized templates
+
+### Video Generation
+- Veo3 API via fal.ai client
+- Progress tracking and status updates
+- Error handling with user feedback
+- Cost tracking and logging
+
+### Video Processing
+- FFmpeg-based concatenation
+- Automatic cleanup of temporary files
+- Web-accessible output directory
+
+## 📊 Veo3 Optimization Research
+
+Our implementation is based on extensive research:
+- **Character Consistency**: Verbatim description repetition
+- **Prompt Structure**: Subject → Context → Action → Camera → Audio
+- **Cinematic Language**: Professional film terminology
+- **Audio Integration**: Native Veo3 audio capabilities
+- **Negative Avoidance**: Describe what you WANT, not what you don't
+
+See `VEO3_OPTIMIZATION_GUIDE.md` for complete details.
+
+## 🔧 Environment Variables
 
 ```bash
-npm run dev
+OPENAI_API_KEY=your_openai_api_key
+FAL_KEY=your_fal_api_key
+PORT=3000
 ```
 
-This uses nodemon for automatic server restarts on file changes.
+## 📝 Example Optimized Script
 
-### Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `FAL_KEY` | fal.ai API key for Veo3 | Yes |
-| `OPENAI_API_KEY` | OpenAI API key for script generation | Yes |
-| `PORT` | Server port (default: 3000) | No |
-| `TEMP_DIR` | Temporary files directory | No |
-| `OUTPUT_DIR` | Output videos directory | No |
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**FFmpeg not found**
-```bash
-# macOS
-brew install ffmpeg
-
-# Ubuntu/Debian
-sudo apt update && sudo apt install ffmpeg
-
-# Windows
-# Download from https://ffmpeg.org/download.html
+```
+A classic Imperial Stormtrooper with gleaming white armor plating, distinctive black eye lenses in the helmet, utility belt with equipment pouches, and the iconic angular helmet design stands confidently in a bright, modern environment. Medium shot composition capturing the character from waist up. The character stands with military posture while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue with slight helmet muffling, subtle ambient room tone.
 ```
 
-**API Key Issues**
-- Ensure `.env` file exists and contains valid API keys
-- Check that fal.ai account has sufficient credits
-- Verify OpenAI API key has GPT-4 access
+## 🚨 Error Handling
 
-**Port Already in Use**
-```bash
-# Kill process on port 3000
-lsof -ti:3000 | xargs kill -9
+- **API Failures**: Fallback to optimized template scripts
+- **Video Generation Errors**: User feedback and retry options
+- **FFmpeg Issues**: Graceful error messages
+- **Edit Validation**: Real-time script validation
 
-# Or use different port
-PORT=3001 npm run dev
-```
+## 🎯 Best Practices
 
-## 📝 Technical Details
+1. **Character Consistency**: Always use exact character descriptions
+2. **Scene Flow**: Ensure logical narrative progression
+3. **Audio Specification**: Always include audio cues
+4. **Camera Variety**: Use different shots for visual interest
+5. **Cost Awareness**: Review scripts before generation
 
-### Video Specifications
-- **Duration**: 8 seconds per scene (24 seconds total)
-- **Format**: MP4 (H.264 + AAC)
-- **Aspect Ratio**: 16:9
-- **Quality**: CRF 23 (high quality)
+## 🔮 Future Enhancements
 
-### Script Generation
-- **Model**: GPT-4
-- **Output**: 3 detailed scene descriptions
-- **Fallback**: Template-based scripts if API fails
+- [ ] Advanced character editor with visual builder
+- [ ] Style preset library
+- [ ] Batch story generation
+- [ ] Quality analytics dashboard
+- [ ] Custom audio library
+- [ ] Advanced camera movement presets
 
-### Cost Optimization
-- Scripts generated before any video API calls
-- User confirmation required before generation
-- Clear cost warnings throughout UI
+## 📚 Documentation
+
+- `VEO3_OPTIMIZATION_GUIDE.md` - Complete optimization guide
+- `PRD.md` - Original product requirements
+- API documentation in code comments
 
 ## 🤝 Contributing
 
-1. Create a feature branch from `main`
-2. Make your changes
-3. Test thoroughly (especially cost implications)
-4. Submit a pull request
+1. Fork the repository
+2. Create a feature branch
+3. Follow Veo3 optimization guidelines
+4. Add tests for new features
+5. Submit a pull request
 
 ## 📄 License
 
-ISC License - see package.json for details
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Google DeepMind for Veo3
+- fal.ai for API access
+- OpenAI for script generation
+- Replicate for optimization research
+- Community contributors for best practices
 
 ## 🆘 Support
 

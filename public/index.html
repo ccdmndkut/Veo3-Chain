@@ -26,10 +26,32 @@
         .progress-bar {
             transition: width 0.3s ease;
         }
+        .scene-card {
+            transition: all 0.2s ease;
+        }
+        .scene-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .edit-button {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .scene-card:hover .edit-button {
+            opacity: 1;
+        }
+        .veo3-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
-    <!-- Purpose: Main web interface for Veo3 Short-Form Story Generator -->
+    <!-- Purpose: Main web interface for Veo3 Short-Form Story Generator with advanced prompt optimization -->
     
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
@@ -38,8 +60,11 @@
             <p class="text-gray-600">Create 30-second stories with consistent characters using AI</p>
             <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg">
                 <p class="text-yellow-800">
-                    <strong>⚠️ Cost Warning:</strong> Each story costs <strong>$15</strong> (3 videos × $5 each)
+                    <strong>⚠️ Cost Warning:</strong> Each story costs <strong>$12</strong> (3 videos × $4 each)
                 </p>
+            </div>
+            <div class="mt-2">
+                <span class="veo3-tag">Veo3 Optimized Prompts</span>
             </div>
         </div>
 
@@ -95,7 +120,7 @@
         <!-- Step 2: Script Review -->
         <div id="step2" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
             <h2 class="text-2xl font-semibold mb-4">Step 2: Review Your Scripts</h2>
-            <p class="text-gray-600 mb-4">Review the generated scene scripts before proceeding with video generation.</p>
+            <p class="text-gray-600 mb-4">Review and edit the generated scene scripts. Each script is optimized for Veo3 with detailed character descriptions, camera movements, and audio cues.</p>
             
             <div id="scriptsContainer" class="space-y-4 mb-6">
                 <!-- Scripts will be populated here -->
@@ -104,7 +129,7 @@
             <div class="cost-warning rounded-lg p-4 text-center mb-4">
                 <h3 class="text-xl font-bold text-yellow-900 mb-2">💰 COST CONFIRMATION</h3>
                 <p class="text-yellow-900">
-                    Proceeding will generate 3 videos at <strong>$5 each = $15 total</strong>
+                    Proceeding will generate 3 videos at <strong>$4 each = $12 total</strong>
                     <br>This charge will be applied to your fal.ai account immediately.
                 </p>
             </div>
@@ -114,7 +139,7 @@
                     id="confirmGenerate" 
                     class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
                 >
-                    ⚡ Confirm & Generate Videos ($15)
+                    ⚡ Confirm & Generate Videos ($12)
                 </button>
                 <button 
                     id="backToEdit" 
@@ -182,6 +207,7 @@
         <!-- Footer -->
         <div class="text-center text-gray-500 text-sm mt-8">
             <p>Powered by Veo3 API • Built with ❤️ for storytellers</p>
+            <p class="mt-1 text-xs">Featuring optimized prompts with character consistency, cinematic camera work, and professional audio cues</p>
         </div>
     </div>
 

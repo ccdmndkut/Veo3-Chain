@@ -3,7 +3,7 @@ Purpose: Video generation module using Veo3 API via fal.ai
 Generates individual 8-second video clips from scene scripts
 */
 
-const fal = require('@fal-ai/client');
+const { fal } = require('@fal-ai/client');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -31,9 +31,8 @@ async function generateVideo(script, character, index) {
                 prompt: script,
                 duration: 8, // 8 seconds as per PRD
                 aspect_ratio: '16:9',
-                guidance_scale: 7.5,
-                num_inference_steps: 50,
-                seed: Math.floor(Math.random() * 1000000), // Random seed for variety
+                // Veo3 supports audio generation
+                audio: false, // Keep costs lower by default
             }
         });
         
@@ -54,7 +53,7 @@ async function generateVideo(script, character, index) {
         await fs.writeFile(outputPath, Buffer.from(videoBuffer));
         
         console.log(`💾 Video ${index + 1} saved to: ${outputPath}`);
-        console.log(`💰 Cost incurred: $5.00 (Total so far: $${(index + 1) * 5})`);
+        console.log(`💰 Cost incurred: $4.00 (Total so far: $${(index + 1) * 4})`);
         
         return outputPath;
         
@@ -62,7 +61,7 @@ async function generateVideo(script, character, index) {
         console.error(`Error generating video ${index + 1}:`, error);
         
         // Log cost even on failure (API call was still made)
-        console.log(`💰 Cost incurred (failed): $5.00`);
+        console.log(`💰 Cost incurred (failed): $4.00`);
         
         // Create a placeholder or retry logic could go here
         throw new Error(`Failed to generate video ${index + 1}: ${error.message}`);
@@ -77,7 +76,7 @@ async function generateVideo(script, character, index) {
  */
 async function generateVideos(scripts, character) {
     const videoPaths = [];
-    const totalCost = scripts.length * 5;
+    const totalCost = scripts.length * 4; // $0.50 per second * 8 seconds = $4 per video
     
     console.log(`🎬 Starting video generation for ${scripts.length} scenes`);
     console.log(`💰 Total estimated cost: $${totalCost}`);
@@ -109,7 +108,7 @@ async function generateVideos(scripts, character) {
  * @returns {object} Cost information
  */
 function getEstimatedCost(numberOfVideos) {
-    const costPerVideo = 5;
+    const costPerVideo = 4; // $0.50 per second * 8 seconds
     const totalCost = numberOfVideos * costPerVideo;
     
     return {

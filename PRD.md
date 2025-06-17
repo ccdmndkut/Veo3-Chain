@@ -88,10 +88,10 @@ flowchart TD
 
 | Action                | API Calls | Cost per Call | Total Cost |
 |-----------------------|-----------|---------------|------------|
-| Generate 1 video      | 1         | $5            | $5         |
-| Generate 3 videos     | 3         | $5            | $15        |
+| Generate 1 video      | 1         | $4            | $4         |
+| Generate 3 videos     | 3         | $4            | $12        |
 | Concatenate videos    | 0         | $0            | $0         |
-| **Total per story**   | 3         | $5            | **$15**    |
+| **Total per story**   | 3         | $4            | **$12**    |
 
 ---
 

@@ -1,12 +1,13 @@
 /*
-Purpose: Frontend JavaScript for Veo3 Story Generator
-Handles UI interactions, API calls, and progress tracking
+Purpose: Frontend JavaScript for Veo3 Story Generator with advanced editing capabilities
+Handles UI interactions, API calls, progress tracking, and scene script editing
 */
 
 class Veo3StoryGenerator {
     constructor() {
         this.currentScripts = [];
         this.currentCharacter = '';
+        this.editingSceneIndex = -1;
         this.initializeEventListeners();
     }
 
@@ -23,6 +24,9 @@ class Veo3StoryGenerator {
         
         // Step 4: Final actions
         document.getElementById('createAnother').addEventListener('click', this.reset.bind(this));
+        
+        // Listen for clicks on edit buttons (using event delegation)
+        document.addEventListener('click', this.handleEditClick.bind(this));
     }
 
     handleCharacterChange(event) {
@@ -76,7 +80,7 @@ class Veo3StoryGenerator {
         
         try {
             generateBtn.disabled = true;
-            generateBtn.innerHTML = '<span class="loading mr-2"></span>Generating Scripts...';
+            generateBtn.innerHTML = '<span class="loading mr-2"></span>Generating Veo3-Optimized Scripts...';
             
             const response = await fetch('/api/generate-scripts', {
                 method: 'POST',
@@ -113,13 +117,131 @@ class Veo3StoryGenerator {
         
         scripts.forEach((script, index) => {
             const scriptDiv = document.createElement('div');
-            scriptDiv.className = 'border border-gray-300 rounded-lg p-4';
+            scriptDiv.className = 'scene-card border border-gray-300 rounded-lg p-4 relative bg-white';
             scriptDiv.innerHTML = `
-                <h3 class="font-semibold text-lg mb-2">Scene ${index + 1}</h3>
-                <p class="text-gray-700">${script}</p>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-semibold text-lg text-gray-800">Scene ${index + 1}</h3>
+                    <button 
+                        class="edit-button bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full transition-all duration-200"
+                        data-scene-index="${index}"
+                        title="Edit Scene ${index + 1}"
+                    >
+                        ✏️ Edit
+                    </button>
+                </div>
+                <div class="mb-2">
+                    <span class="veo3-tag text-xs">Veo3 Optimized</span>
+                </div>
+                <p class="text-gray-700 leading-relaxed scene-text" data-scene-index="${index}">${this.formatScriptText(script)}</p>
             `;
             container.appendChild(scriptDiv);
         });
+    }
+
+    formatScriptText(script) {
+        // Add some basic formatting to make the script more readable
+        return script.replace(/\. /g, '.<br><br>').replace(/Audio:/g, '<br><strong>Audio:</strong>');
+    }
+
+    handleEditClick(event) {
+        if (event.target.classList.contains('edit-button') || event.target.closest('.edit-button')) {
+            const button = event.target.classList.contains('edit-button') ? event.target : event.target.closest('.edit-button');
+            const sceneIndex = parseInt(button.getAttribute('data-scene-index'));
+            this.openEditModal(sceneIndex);
+        }
+    }
+
+    openEditModal(sceneIndex) {
+        this.editingSceneIndex = sceneIndex;
+        const currentScript = this.currentScripts[sceneIndex];
+        
+        // Create modal HTML
+        const modalHTML = `
+            <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-90vh overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-gray-800">Edit Scene ${sceneIndex + 1}</h2>
+                        <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                    </div>
+                    
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-blue-800 text-sm">
+                            <strong>💡 Veo3 Optimization Tips:</strong> Include character details, camera movements (dolly, pan, tracking), 
+                            shot composition (close-up, wide shot), lighting/ambiance, and audio cues for best results.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Scene Script (Veo3 Optimized)
+                        </label>
+                        <textarea id="editScriptText" rows="8" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your scene script with detailed Veo3 optimizations...">${currentScript}</textarea>
+                    </div>
+                    
+                    <div class="flex gap-3 justify-end">
+                        <button id="cancelEdit" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                            Cancel
+                        </button>
+                        <button id="saveEdit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                            💾 Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to DOM
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Add event listeners
+        document.getElementById('closeModal').addEventListener('click', this.closeEditModal.bind(this));
+        document.getElementById('cancelEdit').addEventListener('click', this.closeEditModal.bind(this));
+        document.getElementById('saveEdit').addEventListener('click', this.saveEditedScript.bind(this));
+        
+        // Focus on textarea
+        document.getElementById('editScriptText').focus();
+    }
+
+    saveEditedScript() {
+        const newScriptText = document.getElementById('editScriptText').value.trim();
+        
+        if (!newScriptText) {
+            alert('Please enter a script for this scene.');
+            return;
+        }
+        
+        // Update the script in our array
+        this.currentScripts[this.editingSceneIndex] = newScriptText;
+        
+        // Update the display
+        this.displayScripts(this.currentScripts);
+        
+        // Close modal
+        this.closeEditModal();
+        
+        // Show success feedback
+        this.showEditSuccessMessage();
+    }
+
+    closeEditModal() {
+        const modal = document.getElementById('editModal');
+        if (modal) {
+            modal.remove();
+        }
+        this.editingSceneIndex = -1;
+    }
+
+    showEditSuccessMessage() {
+        // Create temporary success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        successMsg.textContent = '✅ Scene updated successfully!';
+        document.body.appendChild(successMsg);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            successMsg.remove();
+        }, 3000);
     }
 
     backToStep1() {
