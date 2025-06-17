@@ -1,6 +1,6 @@
 /*
 Purpose: Video generation module using Veo3 API via fal.ai
-Generates individual 8-second video clips from scene scripts
+Generates individual video clips from scene scripts
 */
 
 const { fal } = require('@fal-ai/client');
@@ -25,14 +25,24 @@ async function generateVideo(script, character, index) {
     
     try {
         console.log(`🎬 Generating video ${index + 1}/3: ${script.substring(0, 100)}...`);
+        console.log(`📝 Full prompt (${script.length} chars): ${script}`);
         
+        // Only truncate if extremely long (Veo3 can handle detailed prompts)
+        const maxPromptLength = 2000; // Much more generous limit
+        const trimmedScript = script.length > maxPromptLength 
+            ? script.substring(0, maxPromptLength - 3) + '...'
+            : script;
+            
+        if (script.length > maxPromptLength) {
+            console.log(`⚠️ Prompt truncated from ${script.length} to ${trimmedScript.length} characters`);
+        }
+        
+        // Use working parameters from successful test
         const result = await fal.subscribe('fal-ai/veo3', {
             input: {
-                prompt: script,
-                duration: 8, // 8 seconds as per PRD
-                aspect_ratio: '16:9',
-                // Veo3 supports audio generation
-                audio: false, // Keep costs lower by default
+                prompt: trimmedScript,
+                aspect_ratio: '16:9'
+                // Note: Don't include audio parameter - it causes 422 validation error
             }
         });
         
@@ -42,6 +52,7 @@ async function generateVideo(script, character, index) {
         
         const videoUrl = result.data.video.url;
         console.log(`📹 Video ${index + 1} generated successfully, downloading...`);
+        console.log(`🔗 Video URL: ${videoUrl}`);
         
         // Download the video
         const videoResponse = await fetch(videoUrl);
@@ -53,17 +64,31 @@ async function generateVideo(script, character, index) {
         await fs.writeFile(outputPath, Buffer.from(videoBuffer));
         
         console.log(`💾 Video ${index + 1} saved to: ${outputPath}`);
-        console.log(`💰 Cost incurred: $4.00 (Total so far: $${(index + 1) * 4})`);
+        console.log(`💰 Cost incurred: Variable cost based on video length`);
         
         return outputPath;
         
     } catch (error) {
         console.error(`Error generating video ${index + 1}:`, error);
         
-        // Log cost even on failure (API call was still made)
-        console.log(`💰 Cost incurred (failed): $4.00`);
+        // Enhanced error logging for debugging
+        if (error.status === 422 && error.body) {
+            console.error(`🚨 Validation Error Details:`, JSON.stringify(error.body, null, 2));
+            if (error.body.detail) {
+                console.error(`🔍 Specific validation issues:`, error.body.detail);
+                // Log each validation error detail
+                error.body.detail.forEach((detail, i) => {
+                    console.error(`   ${i + 1}. ${JSON.stringify(detail)}`);
+                });
+            }
+        }
         
-        // Create a placeholder or retry logic could go here
+        // Log the prompt that failed
+        console.error(`❌ Failed prompt (${script.length} chars): ${script}`);
+        
+        // Log cost even on failure (API call was still made)
+        console.log(`💰 Cost incurred (failed): Variable cost`);
+        
         throw new Error(`Failed to generate video ${index + 1}: ${error.message}`);
     }
 }
@@ -76,10 +101,14 @@ async function generateVideo(script, character, index) {
  */
 async function generateVideos(scripts, character) {
     const videoPaths = [];
-    const totalCost = scripts.length * 4; // $0.50 per second * 8 seconds = $4 per video
     
     console.log(`🎬 Starting video generation for ${scripts.length} scenes`);
-    console.log(`💰 Total estimated cost: $${totalCost}`);
+    console.log(`💰 Cost will vary based on video length ($0.50 per second)`);
+    
+    // Log all scripts for debugging
+    scripts.forEach((script, index) => {
+        console.log(`📋 Script ${index + 1} (${script.length} chars):`, script.substring(0, 200) + '...');
+    });
     
     for (let i = 0; i < scripts.length; i++) {
         try {
@@ -97,7 +126,6 @@ async function generateVideos(scripts, character) {
     }
     
     console.log(`🎉 All videos generated successfully!`);
-    console.log(`💰 Total cost: $${totalCost}`);
     
     return videoPaths;
 }
@@ -108,15 +136,19 @@ async function generateVideos(scripts, character) {
  * @returns {object} Cost information
  */
 function getEstimatedCost(numberOfVideos) {
-    const costPerVideo = 4; // $0.50 per second * 8 seconds
-    const totalCost = numberOfVideos * costPerVideo;
+    const estimatedSecondsPerVideo = 8; // Rough estimate
+    const costPerSecond = 0.50;
+    const estimatedCostPerVideo = estimatedSecondsPerVideo * costPerSecond;
+    const totalCost = numberOfVideos * estimatedCostPerVideo;
     
     return {
         numberOfVideos,
-        costPerVideo,
+        estimatedSecondsPerVideo,
+        costPerSecond,
+        estimatedCostPerVideo,
         totalCost,
         currency: 'USD',
-        warning: 'This is a real cost that will be charged to your fal.ai account'
+        warning: 'Actual cost varies by video length. Veo3 charges $0.50 per second of generated video.'
     };
 }
 

@@ -57,6 +57,48 @@ function getCharacterDescription(character) {
 }
 
 /**
+ * Extract JSON from a text response using OpenAI
+ * @param {string} text - The text response that should contain JSON
+ * @returns {Promise<string[]>} Array of extracted scripts
+ */
+async function extractJSONWithAPI(text) {
+    console.log('🔧 Using API to extract JSON from response...');
+    
+    const extractionPrompt = `Extract exactly 3 scene descriptions from the following text and return them as a clean JSON array with 3 strings.
+
+Text to extract from:
+${text}
+
+Return ONLY the JSON array, nothing else:`;
+
+    try {
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [
+                { role: 'system', content: 'You are a JSON extraction tool. Return only valid JSON arrays.' },
+                { role: 'user', content: extractionPrompt }
+            ],
+            temperature: 0.1,
+            max_tokens: 2000,
+        });
+
+        const content = response.choices[0].message.content.trim();
+        const scripts = JSON.parse(content);
+        
+        if (Array.isArray(scripts) && scripts.length === 3) {
+            console.log('✅ Successfully extracted JSON with API');
+            return scripts;
+        } else {
+            throw new Error(`Expected 3 scripts, got ${scripts.length}`);
+        }
+        
+    } catch (error) {
+        console.error('❌ API extraction failed:', error);
+        throw error;
+    }
+}
+
+/**
  * Generate 3 scene scripts from character and story prompt using Veo3 best practices
  * @param {string} character - The main character (e.g., "stormtrooper")
  * @param {string} prompt - User's story prompt
@@ -88,6 +130,8 @@ CRITICAL VEO3 OPTIMIZATION RULES:
 
 Create exactly 3 scenes that flow as a cohesive story. Each scene must be one detailed paragraph optimized for Veo3.
 
+IMPORTANT: Return ONLY a JSON array with 3 strings. No other text.
+
 Format as JSON array with 3 strings.`;
 
     const userPrompt = `Character: ${character}
@@ -96,7 +140,7 @@ ${characterData ? `Voice: ${characterData.voice}, Mannerisms: ${characterData.ma
 
 Story Prompt: ${prompt}
 
-Create 3 Veo3-optimized scene scripts following the structure above.`;
+Create 3 Veo3-optimized scene scripts following the structure above. Return only the JSON array.`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -116,9 +160,9 @@ Create 3 Veo3-optimized scene scripts following the structure above.`;
         try {
             scripts = JSON.parse(content);
         } catch (parseError) {
-            // If JSON parsing fails, try to extract scripts manually
-            console.warn('Failed to parse JSON, attempting manual extraction');
-            scripts = extractScriptsFromText(content);
+            console.warn('Failed to parse JSON, using API extraction...');
+            // Use API to extract JSON instead of manual extraction
+            scripts = await extractJSONWithAPI(content);
         }
 
         // Validate we have exactly 3 scripts
