@@ -111,24 +111,28 @@ async function generateSceneScripts(character, prompt) {
     const systemPrompt = `You are an expert Veo3 prompt engineer specializing in creating optimal prompts for Google's Veo3 video generation AI. 
 
 CRITICAL VEO3 OPTIMIZATION RULES:
-1. CHARACTER CONSISTENCY: Use the EXACT same character description in each scene
-2. STRUCTURE: Follow this exact format for each scene:
+1. DURATION: Each scene must be exactly 8 seconds - specify timing and pacing accordingly
+2. CHARACTER CONSISTENCY: Use the EXACT same character description in each scene
+3. ENVIRONMENT CONSISTENCY: Create a coherent environment that flows between scenes
+4. STRUCTURE: Follow this exact format for each scene:
+   - Duration: [8 seconds maximum]
    - Subject: [Detailed character description]
-   - Context: [Specific setting/environment]
-   - Action: [Precise action/movement]
+   - Context: [Specific setting/environment that connects to other scenes]
+   - Action: [Precise 8-second action/movement]
    - Camera Motion: [Specific camera movement]
    - Composition: [Shot framing]
    - Style: [Visual aesthetic]
    - Ambiance: [Lighting/mood]
    - Audio: [Sound effects and dialogue]
 
-3. CAMERA MOVEMENTS: Use cinematic terms like "dolly in", "tracking shot", "pan left", "crane shot", "close-up", "medium shot", "wide shot"
-4. AUDIO: Always include specific sound effects, ambient noise, and dialogue instructions
-5. AVOID: Never use "no" or "don't" - describe what you WANT to see
-6. DIALOGUE: Format as 'Character says: "dialogue text" (no subtitles!)'
-7. CONSISTENCY: Repeat the exact character description verbatim in each scene
+5. CAMERA MOVEMENTS: Use cinematic terms like "dolly in", "tracking shot", "pan left", "crane shot", "close-up", "medium shot", "wide shot"
+6. AUDIO: Always include specific sound effects, ambient noise, and dialogue instructions
+7. AVOID: Never use "no" or "don't" - describe what you WANT to see
+8. DIALOGUE: Format as 'Character says: "dialogue text" (no subtitles!)'
+9. CONSISTENCY: Repeat the exact character description verbatim in each scene
+10. ENVIRONMENT FLOW: Each scene should logically connect to the next in the same location or clearly transition
 
-Create exactly 3 scenes that flow as a cohesive story. Each scene must be one detailed paragraph optimized for Veo3.
+Create exactly 3 scenes (8 seconds each) that flow as a cohesive story in a consistent environment. Each scene must be one detailed paragraph optimized for Veo3.
 
 IMPORTANT: Return ONLY a JSON array with 3 strings. No other text.
 
@@ -140,7 +144,7 @@ ${characterData ? `Voice: ${characterData.voice}, Mannerisms: ${characterData.ma
 
 Story Prompt: ${prompt}
 
-Create 3 Veo3-optimized scene scripts following the structure above. Return only the JSON array.`;
+Create 3 consecutive 8-second scene scripts that flow in a consistent environment. Each scene should logically connect to the next. Return only the JSON array.`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -170,17 +174,25 @@ Create 3 Veo3-optimized scene scripts following the structure above. Return only
             throw new Error(`Expected 3 scripts, got ${scripts ? scripts.length : 0}`);
         }
 
-        // Ensure character consistency in each script
+        // Enhance scripts with 8-second duration and character consistency
         const enhancedScripts = scripts.map((script, index) => {
             const sceneNumber = index + 1;
-            // Ensure the character description is at the beginning of each script
-            if (!script.includes(characterDesc)) {
-                return `${characterDesc}. ${script}`;
+            
+            // Ensure 8-second duration is specified
+            let enhancedScript = script;
+            if (!script.toLowerCase().includes('8 second') && !script.toLowerCase().includes('8-second')) {
+                enhancedScript = `8-second scene: ${script}`;
             }
-            return script;
+            
+            // Ensure the character description is at the beginning of each script
+            if (!enhancedScript.includes(characterDesc)) {
+                enhancedScript = `${characterDesc}. ${enhancedScript}`;
+            }
+            
+            return enhancedScript;
         });
 
-        console.log('Generated Veo3-optimized scripts:', enhancedScripts);
+        console.log('Generated Veo3-optimized 8-second scripts:', enhancedScripts);
         return enhancedScripts;
 
     } catch (error) {
@@ -224,12 +236,18 @@ function generateVeo3FallbackScripts(character, prompt) {
     const characterDesc = getCharacterDescription(character);
     const characterData = CHARACTER_BIBLE[character] || { voice: "speaks clearly", mannerisms: "moves naturally" };
     
+    // Create a consistent environment based on the prompt
+    const environment = prompt.toLowerCase().includes('hackathon') ? 'modern tech conference hall' :
+                       prompt.toLowerCase().includes('space') ? 'futuristic space station' :
+                       prompt.toLowerCase().includes('forest') ? 'mystical forest clearing' :
+                       'contemporary indoor setting';
+    
     return [
-        `${characterDesc} stands confidently in a bright, modern environment with clean lines and warm lighting. Medium shot composition capturing the character from waist up. The character ${characterData.mannerisms} while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue, subtle ambient room tone, soft background music building.`,
+        `8-second scene: ${characterDesc} stands confidently in a ${environment} with bright, even lighting and modern architectural elements. Medium shot composition capturing the character from waist up. The character ${characterData.mannerisms} while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue with ${characterData.voice}, subtle ambient room tone, soft background music building.`,
         
-        `${characterDesc} now sits in a cozy, intimate setting with soft warm lighting creating a personal atmosphere. Close-up shot focusing on the character's expressive gestures. The character ${characterData.mannerisms} while ${characterData.voice} and says: "Let me tell you what happened next." (no subtitles!). Camera: Slow dolly in for emotional connection. Style: Warm, golden hour lighting. Audio: Intimate dialogue, gentle ambient sounds, crackling fireplace in background.`,
+        `8-second scene: ${characterDesc} now moves through the same ${environment}, the lighting shifting to warmer, more intimate tones. Close-up shot focusing on the character's expressive gestures as they navigate the space. The character ${characterData.mannerisms} while ${characterData.voice} and says: "Let me tell you what happened next." (no subtitles!). Camera: Slow dolly in following the character's movement. Style: Warm, golden hour lighting. Audio: Intimate dialogue, gentle ambient sounds from the environment, subtle background music.`,
         
-        `${characterDesc} stands in a dramatic outdoor setting with beautiful natural lighting and scenic background. Wide shot revealing the full environment and character. The character ${characterData.mannerisms} while looking thoughtfully into the distance and says: "And that's how the story ends." (no subtitles!). Camera: Crane shot pulling back to reveal the landscape. Style: Cinematic sunset lighting. Audio: Reflective dialogue, wind through trees, swelling orchestral conclusion.`
+        `8-second scene: ${characterDesc} reaches a prominent position in the ${environment} with dramatic lighting creating strong shadows and highlights. Wide shot revealing the full environment and character's final stance. The character ${characterData.mannerisms} while looking thoughtfully into the distance and says: "And that's how the story ends." (no subtitles!). Camera: Crane shot pulling back to reveal the complete environment. Style: Cinematic dramatic lighting. Audio: Reflective dialogue, environmental ambiance, swelling orchestral conclusion.`
     ];
 }
 

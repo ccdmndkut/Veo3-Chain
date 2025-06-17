@@ -57,14 +57,14 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">🎬 Veo3 Story Generator</h1>
-            <p class="text-gray-600">Create 30-second stories with consistent characters using AI</p>
+            <p class="text-gray-600">Create 24-second stories with three 8-second scenes and consistent characters</p>
             <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg">
                 <p class="text-yellow-800">
-                    <strong>⚠️ Cost Warning:</strong> Each story costs <strong>$12</strong> (3 videos × $4 each)
+                    <strong>⚠️ Cost Warning:</strong> Each story costs approximately <strong>$12</strong> (3 × 8-second videos at $0.50/second)
                 </p>
             </div>
             <div class="mt-2">
-                <span class="veo3-tag">Veo3 Optimized Prompts</span>
+                <span class="veo3-tag">8-Second Scenes • Consistent Environment</span>
             </div>
         </div>
 
@@ -103,7 +103,7 @@
                     <textarea 
                         id="prompt" 
                         rows="4" 
-                        placeholder="Describe your story idea... (e.g., 'A stormtrooper vlogs their day in three scenes')"
+                        placeholder="Describe your story idea... The AI will create 3 consecutive 8-second scenes in a consistent environment."
                         class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     ></textarea>
                 </div>
@@ -113,14 +113,14 @@
                 id="generateScripts" 
                 class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
             >
-                Generate Scene Scripts
+                Generate 8-Second Scene Scripts
             </button>
         </div>
 
         <!-- Step 2: Script Review -->
         <div id="step2" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">Step 2: Review Your Scripts</h2>
-            <p class="text-gray-600 mb-4">Review and edit the generated scene scripts. Each script is optimized for Veo3 with detailed character descriptions, camera movements, and audio cues.</p>
+            <h2 class="text-2xl font-semibold mb-4">Step 2: Review Your 8-Second Scenes</h2>
+            <p class="text-gray-600 mb-4">Review and edit the generated scene scripts. Each 8-second scene flows in a consistent environment with detailed Veo3 optimizations including character descriptions, camera movements, and audio cues.</p>
             
             <div id="scriptsContainer" class="space-y-4 mb-6">
                 <!-- Scripts will be populated here -->
@@ -129,7 +129,7 @@
             <div class="cost-warning rounded-lg p-4 text-center mb-4">
                 <h3 class="text-xl font-bold text-yellow-900 mb-2">💰 COST CONFIRMATION</h3>
                 <p class="text-yellow-900">
-                    Proceeding will generate 3 videos at <strong>$4 each = $12 total</strong>
+                    Proceeding will generate 3 × 8-second videos at <strong>$0.50/second ≈ $12 total</strong>
                     <br>This charge will be applied to your fal.ai account immediately.
                 </p>
             </div>
@@ -139,7 +139,7 @@
                     id="confirmGenerate" 
                     class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
                 >
-                    ⚡ Confirm & Generate Videos ($12)
+                    ⚡ Confirm & Generate Videos (~$12)
                 </button>
                 <button 
                     id="backToEdit" 
@@ -152,7 +152,7 @@
 
         <!-- Step 3: Video Generation Progress -->
         <div id="step3" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">Step 3: Generating Your Story</h2>
+            <h2 class="text-2xl font-semibold mb-4">Step 3: Generating Your 8-Second Scenes</h2>
             
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
@@ -167,15 +167,15 @@
             <div id="statusContainer" class="space-y-2">
                 <div id="status1" class="flex items-center text-gray-500">
                     <span class="loading mr-3 hidden"></span>
-                    <span>Scene 1: Waiting...</span>
+                    <span>Scene 1 (8 seconds): Waiting...</span>
                 </div>
                 <div id="status2" class="flex items-center text-gray-500">
                     <span class="loading mr-3 hidden"></span>
-                    <span>Scene 2: Waiting...</span>
+                    <span>Scene 2 (8 seconds): Waiting...</span>
                 </div>
                 <div id="status3" class="flex items-center text-gray-500">
                     <span class="loading mr-3 hidden"></span>
-                    <span>Scene 3: Waiting...</span>
+                    <span>Scene 3 (8 seconds): Waiting...</span>
                 </div>
                 <div id="statusConcat" class="flex items-center text-gray-500">
                     <span class="loading mr-3 hidden"></span>
@@ -186,7 +186,7 @@
 
         <!-- Step 4: Results -->
         <div id="step4" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">🎉 Your Story is Ready!</h2>
+            <h2 class="text-2xl font-semibold mb-4">🎉 Your 24-Second Story is Ready!</h2>
             
             <div class="text-center">
                 <video id="resultVideo" controls class="w-full max-w-md mx-auto mb-4 rounded-lg shadow-lg">
@@ -207,7 +207,7 @@
         <!-- Footer -->
         <div class="text-center text-gray-500 text-sm mt-8">
             <p>Powered by Veo3 API • Built with ❤️ for storytellers</p>
-            <p class="mt-1 text-xs">Featuring optimized prompts with character consistency, cinematic camera work, and professional audio cues</p>
+            <p class="mt-1 text-xs">Featuring 8-second scenes with consistent environments, character continuity, and professional cinematography</p>
         </div>
     </div>
 

@@ -58,7 +58,7 @@ app.post('/api/generate-scripts', async (req, res) => {
         res.json({
             success: true,
             scripts,
-            estimatedCost: scripts.length * 4 // $4 per 8-second video
+            estimatedCost: scripts.length * 4 // Estimated $4 per 8-second video (varies by actual length)
         });
     } catch (error) {
         console.error('Error generating scripts:', error);
@@ -130,7 +130,7 @@ async function startServer() {
         await ensureDirectories();
         app.listen(PORT, () => {
             console.log(`🚀 Veo3 Story Generator server running on http://localhost:${PORT}`);
-            console.log(`💰 Current API costs: $4 per 8-second video`);
+            console.log(`💰 Veo3 pricing: $0.50 per second (8-second videos ≈ $4 each)`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);
