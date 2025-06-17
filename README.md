@@ -1,6 +1,6 @@
 # Veo3-Chain
 
-This repository contains the implementation of the Veo3 blockchain system.
+This repository contains the implementation of the Veo3  system.
 
 ## Overview
 
