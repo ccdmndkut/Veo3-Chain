@@ -16,32 +16,38 @@ const CHARACTER_BIBLE = {
     stormtrooper: {
         description: "A classic Imperial Stormtrooper with gleaming white armor plating, distinctive black eye lenses in the helmet, utility belt with equipment pouches, and the iconic angular helmet design. The armor shows subtle battle-worn details and reflective surfaces.",
         voice: "speaks with a clear, authoritative voice slightly muffled by the helmet",
-        mannerisms: "stands with military posture, gestures with precision"
+        mannerisms: "stands with military posture, gestures with precision",
+        equipment: "carries an authentic Star Wars E-11 blaster rifle with distinctive white and black design"
     },
     wizard: {
         description: "An elderly wizard with a long, flowing grey beard reaching his chest, wearing deep purple robes with silver embroidered stars, a pointed hat with a wide brim, and carrying a gnarled wooden staff topped with a glowing crystal. His eyes are wise and twinkling blue.",
         voice: "speaks with a warm, deep voice filled with ancient wisdom",
-        mannerisms: "gestures gracefully with weathered hands, strokes his beard thoughtfully"
+        mannerisms: "gestures gracefully with weathered hands, strokes his beard thoughtfully",
+        equipment: "magical staff with glowing crystal, spell components in belt pouches"
     },
     detective: {
         description: "A seasoned detective in his 40s with short brown hair, wearing a rumpled beige trench coat over a white shirt and dark tie, with a fedora hat and worn leather shoes. He has a weathered face with sharp, observant eyes and a slight five o'clock shadow.",
         voice: "speaks with a gravelly, world-weary voice",
-        mannerisms: "adjusts his hat brim, takes notes in a small notebook"
+        mannerisms: "adjusts his hat brim, takes notes in a small notebook",
+        equipment: "vintage magnifying glass, leather notebook, fountain pen"
     },
     chef: {
         description: "A professional chef wearing a pristine white double-breasted chef's coat with black buttons, a traditional white toque blanche (chef's hat), black and white checkered pants, and black non-slip shoes. Has flour-dusted hands and carries a wooden spoon.",
         voice: "speaks with passionate enthusiasm about food",
-        mannerisms: "tastes food with a spoon, wipes hands on apron towel"
+        mannerisms: "tastes food with a spoon, wipes hands on apron towel",
+        equipment: "professional chef's knife, wooden spoon, various cooking utensils"
     },
     astronaut: {
         description: "A modern astronaut wearing a sleek white spacesuit with NASA patches, reflective gold visor on the helmet, life support backpack with glowing status lights, and reinforced boots. The suit has subtle blue LED accents and mission patches.",
         voice: "speaks with clear, professional tone through helmet comm system",
-        mannerisms: "checks wrist display panels, moves with careful precision"
+        mannerisms: "checks wrist display panels, moves with careful precision",
+        equipment: "tablet computer, space tools, communication device"
     },
     pirate: {
         description: "A swashbuckling pirate captain with a tricorn hat adorned with a feather, weathered brown leather coat over a white shirt, black boots, and a red sash around the waist. Has a neatly trimmed black beard and carries a cutlass at the hip.",
         voice: "speaks with a hearty, adventurous accent",
-        mannerisms: "adjusts tricorn hat, gestures broadly with weathered hands"
+        mannerisms: "adjusts tricorn hat, gestures broadly with weathered hands",
+        equipment: "curved cutlass sword, flintlock pistol, treasure map"
     }
 };
 
@@ -114,25 +120,29 @@ CRITICAL VEO3 OPTIMIZATION RULES:
 1. DURATION: Each scene must be exactly 8 seconds - specify timing and pacing accordingly
 2. CHARACTER CONSISTENCY: Use the EXACT same character description in each scene
 3. ENVIRONMENT CONSISTENCY: Create a coherent environment that flows between scenes
-4. STRUCTURE: Follow this exact format for each scene:
+4. NO SILENCE RULE: Every moment must have either dialogue OR comical background action
+5. AUTHENTIC EQUIPMENT: Use character-specific authentic equipment (e.g., Star Wars E-11 blaster for stormtroopers)
+6. STRUCTURE: Follow this exact format for each scene:
    - Duration: [8 seconds maximum]
    - Subject: [Detailed character description]
    - Context: [Specific setting/environment that connects to other scenes]
-   - Action: [Precise 8-second action/movement]
+   - Action: [Precise 8-second action/movement with continuous activity]
    - Camera Motion: [Specific camera movement]
    - Composition: [Shot framing]
    - Style: [Visual aesthetic]
    - Ambiance: [Lighting/mood]
-   - Audio: [Sound effects and dialogue]
+   - Audio: [Continuous sound - dialogue, sound effects, background comedy]
 
-5. CAMERA MOVEMENTS: Use cinematic terms like "dolly in", "tracking shot", "pan left", "crane shot", "close-up", "medium shot", "wide shot"
-6. AUDIO: Always include specific sound effects, ambient noise, and dialogue instructions
-7. AVOID: Never use "no" or "don't" - describe what you WANT to see
-8. DIALOGUE: Format as 'Character says: "dialogue text" (no subtitles!)'
-9. CONSISTENCY: Repeat the exact character description verbatim in each scene
-10. ENVIRONMENT FLOW: Each scene should logically connect to the next in the same location or clearly transition
+7. CAMERA MOVEMENTS: Use cinematic terms like "dolly in", "tracking shot", "pan left", "crane shot", "close-up", "medium shot", "wide shot"
+8. CONTINUOUS AUDIO: Always include specific sound effects, ambient noise, and dialogue instructions - NO SILENT MOMENTS
+9. BACKGROUND COMEDY: If character isn't speaking, add funny background actions or reactions from other characters
+10. AVOID: Never use "no" or "don't" - describe what you WANT to see
+11. DIALOGUE: Format as 'Character says: "dialogue text" (no subtitles!)'
+12. CONSISTENCY: Repeat the exact character description verbatim in each scene
+13. ENVIRONMENT FLOW: Each scene should logically connect to the next in the same location or clearly transition
+14. AUTHENTIC PROPS: Specify authentic franchise-specific equipment (Star Wars blasters, wizard staffs, etc.)
 
-Create exactly 3 scenes (8 seconds each) that flow as a cohesive story in a consistent environment. Each scene must be one detailed paragraph optimized for Veo3.
+Create exactly 3 scenes (8 seconds each) that flow as a cohesive story in a consistent environment. Each scene must be one detailed paragraph optimized for Veo3 with CONTINUOUS ACTION and AUDIO.
 
 IMPORTANT: Return ONLY a JSON array with 3 strings. No other text.
 
@@ -140,11 +150,11 @@ Format as JSON array with 3 strings.`;
 
     const userPrompt = `Character: ${character}
 Character Description: ${characterDesc}
-${characterData ? `Voice: ${characterData.voice}, Mannerisms: ${characterData.mannerisms}` : ''}
+${characterData ? `Voice: ${characterData.voice}, Mannerisms: ${characterData.mannerisms}, Equipment: ${characterData.equipment}` : ''}
 
 Story Prompt: ${prompt}
 
-Create 3 consecutive 8-second scene scripts that flow in a consistent environment. Each scene should logically connect to the next. Return only the JSON array.`;
+Create 3 consecutive 8-second scene scripts that flow in a consistent environment. Each scene should have CONTINUOUS ACTION and AUDIO - no silent moments. If the character isn't speaking, add comical background action. Use authentic equipment for the character. Return only the JSON array.`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -174,7 +184,7 @@ Create 3 consecutive 8-second scene scripts that flow in a consistent environmen
             throw new Error(`Expected 3 scripts, got ${scripts ? scripts.length : 0}`);
         }
 
-        // Enhance scripts with 8-second duration and character consistency
+        // Enhance scripts with 8-second duration, character consistency, and continuous action
         const enhancedScripts = scripts.map((script, index) => {
             const sceneNumber = index + 1;
             
@@ -189,10 +199,15 @@ Create 3 consecutive 8-second scene scripts that flow in a consistent environmen
                 enhancedScript = `${characterDesc}. ${enhancedScript}`;
             }
             
+            // Add continuous action reminder if not present
+            if (!enhancedScript.toLowerCase().includes('continuous') && !enhancedScript.toLowerCase().includes('throughout')) {
+                enhancedScript = enhancedScript.replace('Audio:', 'Continuous action throughout 8 seconds. Audio:');
+            }
+            
             return enhancedScript;
         });
 
-        console.log('Generated Veo3-optimized 8-second scripts:', enhancedScripts);
+        console.log('Generated Veo3-optimized 8-second scripts with continuous action:', enhancedScripts);
         return enhancedScripts;
 
     } catch (error) {
@@ -234,7 +249,11 @@ function extractScriptsFromText(text) {
  */
 function generateVeo3FallbackScripts(character, prompt) {
     const characterDesc = getCharacterDescription(character);
-    const characterData = CHARACTER_BIBLE[character] || { voice: "speaks clearly", mannerisms: "moves naturally" };
+    const characterData = CHARACTER_BIBLE[character] || { 
+        voice: "speaks clearly", 
+        mannerisms: "moves naturally",
+        equipment: "standard equipment for their role"
+    };
     
     // Create a consistent environment based on the prompt
     const environment = prompt.toLowerCase().includes('hackathon') ? 'modern tech conference hall' :
@@ -243,11 +262,11 @@ function generateVeo3FallbackScripts(character, prompt) {
                        'contemporary indoor setting';
     
     return [
-        `8-second scene: ${characterDesc} stands confidently in a ${environment} with bright, even lighting and modern architectural elements. Medium shot composition capturing the character from waist up. The character ${characterData.mannerisms} while looking directly at the camera and says: "Welcome to my story!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Audio: Clear dialogue with ${characterData.voice}, subtle ambient room tone, soft background music building.`,
+        `8-second scene: ${characterDesc} stands confidently in a ${environment} with bright, even lighting and modern architectural elements. Medium shot composition capturing the character from waist up. The character ${characterData.mannerisms} while continuously gesturing and looking directly at the camera throughout the full 8 seconds and says: "Welcome to my story! This is going to be amazing!" (no subtitles!). Camera: Static shot with shallow depth of field. Style: Cinematic, high-key lighting. Continuous action throughout 8 seconds. Audio: Clear dialogue with ${characterData.voice}, subtle ambient room tone, soft background music building, people chattering in background.`,
         
-        `8-second scene: ${characterDesc} now moves through the same ${environment}, the lighting shifting to warmer, more intimate tones. Close-up shot focusing on the character's expressive gestures as they navigate the space. The character ${characterData.mannerisms} while ${characterData.voice} and says: "Let me tell you what happened next." (no subtitles!). Camera: Slow dolly in following the character's movement. Style: Warm, golden hour lighting. Audio: Intimate dialogue, gentle ambient sounds from the environment, subtle background music.`,
+        `8-second scene: ${characterDesc} now moves through the same ${environment}, the lighting shifting to warmer, more intimate tones. Close-up shot focusing on the character's expressive gestures as they navigate the space and interact with ${characterData.equipment}. The character ${characterData.mannerisms} while ${characterData.voice} and continuously talks saying: "Let me tell you what happened next - you won't believe this!" while gesturing animatedly throughout the scene (no subtitles!). Camera: Slow dolly in following the character's movement. Style: Warm, golden hour lighting. Continuous action throughout 8 seconds. Audio: Intimate dialogue, gentle ambient sounds from the environment, subtle background music, occasional comedic sound effects.`,
         
-        `8-second scene: ${characterDesc} reaches a prominent position in the ${environment} with dramatic lighting creating strong shadows and highlights. Wide shot revealing the full environment and character's final stance. The character ${characterData.mannerisms} while looking thoughtfully into the distance and says: "And that's how the story ends." (no subtitles!). Camera: Crane shot pulling back to reveal the complete environment. Style: Cinematic dramatic lighting. Audio: Reflective dialogue, environmental ambiance, swelling orchestral conclusion.`
+        `8-second scene: ${characterDesc} reaches a prominent position in the ${environment} with dramatic lighting creating strong shadows and highlights. Wide shot revealing the full environment and character's final stance. The character ${characterData.mannerisms} while holding ${characterData.equipment} and looking thoughtfully into the distance, then turns back to camera and says: "And that's how the story ends - what a journey!" with a satisfied gesture (no subtitles!). Camera: Crane shot pulling back to reveal the complete environment. Style: Cinematic dramatic lighting. Continuous action throughout 8 seconds. Audio: Reflective dialogue, environmental ambiance, swelling orchestral conclusion, crowd applause in background.`
     ];
 }
 
