@@ -7,6 +7,39 @@ Provides installation, configuration, and usage instructions
 
 A tool to generate 24-second video stories using Google's Veo3 API by chaining three 8-second clips with consistent characters. Now featuring **state-of-the-art Veo3 prompt optimization** for maximum quality and character consistency.
 
+## 🔄 How It Works (Simple Overview)
+
+```mermaid
+flowchart TD
+    A[📝 Story Input<br/>Choose character + write story prompt] 
+    B[🤖 AI Script Generation<br/>3 optimized 8-second scene scripts]
+    C[👀 User Review & Edit<br/>Built-in optimization tips]
+    D[🎬 3x Veo3 Videos<br/>Generate simultaneously]
+    E[🔗 Video Stitching<br/>Automatic FFmpeg processing]
+    F[📱 Final 24s Video<br/>Download complete story]
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#fce4ec
+    style E fill:#e8f5e8
+    style F fill:#4caf50,color:#fff
+```
+
+**Simple Process:**
+1. **Input**: Choose character + write story prompt
+2. **Generate**: AI creates 3 optimized 8-second scene scripts  
+3. **Review**: Edit scripts with built-in optimization tips
+4. **Create**: Generate 3 videos simultaneously ($12 total)
+5. **Combine**: Automatic video stitching into final story
+6. **Download**: Get your 24-second video story
+
 ## 🔄 Technical Workflow
 
 The following diagram shows the complete technical process from user input to final video:
