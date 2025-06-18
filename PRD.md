@@ -54,10 +54,11 @@ flowchart TD
 ## 5. Technical Considerations
 
 ### Stack
-- **Node.js** for backend orchestration
+- **Node.js with Express** for backend server and API endpoints
+- **Static HTML/CSS/JavaScript** for simple web UI
 - **@fal-ai/client** for Veo 3 API integration
 - **fluent-ffmpeg** for video concatenation
-- **React/Next.js** for web UI
+- **OpenAI API** for generating scene scripts from user prompts
 
 ### Cost Control
 - **Prompt user before each API call with cost warning**
@@ -87,10 +88,10 @@ flowchart TD
 
 | Action                | API Calls | Cost per Call | Total Cost |
 |-----------------------|-----------|---------------|------------|
-| Generate 1 video      | 1         | $5            | $5         |
-| Generate 3 videos     | 3         | $5            | $15        |
+| Generate 1 video      | 1         | $4            | $4         |
+| Generate 3 videos     | 3         | $4            | $12        |
 | Concatenate videos    | 0         | $0            | $0         |
-| **Total per story**   | 3         | $5            | **$15**    |
+| **Total per story**   | 3         | $4            | **$12**    |
 
 ---
 
