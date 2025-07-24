@@ -50,34 +50,57 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-900 min-h-screen text-white">
     <!-- Purpose: Main web interface for Veo3 Short-Form Story Generator with advanced prompt optimization -->
     
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">🎬 Veo3 Story Generator</h1>
-            <p class="text-gray-600">Create 24-second stories with three 8-second scenes and consistent characters</p>
-            <div class="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg">
-                <p class="text-yellow-800">
+            <h1 class="text-4xl font-bold text-white mb-2">🎬 Veo3 Story Generator</h1>
+            <p class="text-gray-300">Create 24-second stories with three 8-second scenes and consistent characters</p>
+            <div class="mt-4 p-4 bg-yellow-900 border border-yellow-600 rounded-lg">
+                <p class="text-yellow-200">
                     <strong>⚠️ Cost Warning:</strong> Each story costs approximately <strong>$12</strong> (3 × 8-second videos at $0.50/second)
                 </p>
             </div>
-            <div class="mt-2">
+            <div class="mt-2 flex justify-center items-center gap-4">
                 <span class="veo3-tag">8-Second Scenes • Consistent Environment</span>
+                <a href="/prompt-optimizer" class="text-purple-400 hover:text-purple-300 underline text-sm">
+                    🚀 Try Prompt Optimizer
+                </a>
+            </div>
+        </div>
+
+        <!-- Prompt Optimizer Feature -->
+        <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-md p-6 mb-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">🚀 New: Veo3 Prompt Optimizer</h2>
+                    <p class="text-purple-100 mb-3">Enhance any prompt using the Veo3 meta prompt guide with advanced AI models from OpenRouter</p>
+                    <div class="flex gap-2 text-sm">
+                        <span class="bg-white bg-opacity-20 px-2 py-1 rounded">8 AI Models</span>
+                        <span class="bg-white bg-opacity-20 px-2 py-1 rounded">Dark UI</span>
+                        <span class="bg-white bg-opacity-20 px-2 py-1 rounded">Professional Results</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="/prompt-optimizer" class="bg-white text-purple-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition duration-200 inline-block">
+                        Try Optimizer →
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- Step 1: Character & Prompt Input -->
-        <div id="step1" class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Step 1: Create Your Story</h2>
+        <div id="step1" class="bg-gray-800 rounded-lg shadow-md p-6 mb-6 border border-gray-700">
+            <h2 class="text-2xl font-semibold mb-4 text-white">Step 1: Create Your Story</h2>
             
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
-                    <label for="character" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="character" class="block text-sm font-medium text-gray-300 mb-2">
                         Character
                     </label>
-                    <select id="character" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="character" class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Select a character...</option>
                         <option value="stormtrooper">Stormtrooper</option>
                         <option value="wizard">Wizard</option>
@@ -88,23 +111,23 @@
                         <option value="custom">Custom Character</option>
                     </select>
                     
-                    <input 
-                        id="customCharacter" 
-                        type="text" 
+                    <input
+                        id="customCharacter"
+                        type="text"
                         placeholder="Enter custom character..."
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden"
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 hidden"
                     >
                 </div>
                 
                 <div>
-                    <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="prompt" class="block text-sm font-medium text-gray-300 mb-2">
                         Story Prompt
                     </label>
-                    <textarea 
-                        id="prompt" 
-                        rows="4" 
+                    <textarea
+                        id="prompt"
+                        rows="4"
                         placeholder="Describe your story idea... The AI will create 3 consecutive 8-second scenes in a consistent environment."
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                     ></textarea>
                 </div>
             </div>
@@ -114,12 +137,12 @@
                     <input
                         type="checkbox"
                         id="promptsOnly"
-                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        class="w-4 h-4 text-blue-600 border-gray-600 bg-gray-700 rounded focus:ring-blue-500"
                         checked
                     >
-                    <span class="text-sm text-gray-700">Generate prompts only (no video creation)</span>
+                    <span class="text-sm text-gray-300">Generate prompts only (no video creation)</span>
                 </label>
-                <p class="text-xs text-gray-500 mt-1 ml-6">Check this to only generate and download prompts without creating videos</p>
+                <p class="text-xs text-gray-400 mt-1 ml-6">Check this to only generate and download prompts without creating videos</p>
             </div>
             
             <button
@@ -131,9 +154,9 @@
         </div>
 
         <!-- Step 2: Script Review -->
-        <div id="step2" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">Step 2: Review Your 8-Second Scenes</h2>
-            <p class="text-gray-600 mb-4">Review and edit the generated scene scripts. Each 8-second scene flows in a consistent environment with detailed Veo3 optimizations including character descriptions, camera movements, and audio cues.</p>
+        <div id="step2" class="bg-gray-800 rounded-lg shadow-md p-6 mb-6 border border-gray-700 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-white">Step 2: Review Your 8-Second Scenes</h2>
+            <p class="text-gray-300 mb-4">Review and edit the generated scene scripts. Each 8-second scene flows in a consistent environment with detailed Veo3 optimizations including character descriptions, camera movements, and audio cues.</p>
             
             <div id="scriptsContainer" class="space-y-4 mb-6">
                 <!-- Scripts will be populated here -->
@@ -147,31 +170,7 @@
                 </p>
             </div>
             
-            <div class="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                <h3 class="text-lg font-semibold text-purple-800 mb-2">🚀 OpenRouter Optimization</h3>
-                <p class="text-purple-700 text-sm mb-3">
-                    Enhance your prompts using the Veo3 meta prompt guide with advanced AI models from OpenRouter.
-                </p>
-                <div class="flex items-center gap-3">
-                    <label for="optimizerModel" class="text-sm font-medium text-purple-700">
-                        Select Model:
-                    </label>
-                    <select
-                        id="optimizerModel"
-                        class="flex-1 border border-purple-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                        <option value="anthropic/claude-3.5-sonnet">Loading models...</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="flex gap-4 flex-wrap">
-                <button
-                    id="optimizePrompts"
-                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
-                >
-                    🚀 Optimize with OpenRouter
-                </button>
+            <div class="flex gap-4">
                 <button
                     id="confirmGenerate"
                     class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
@@ -188,33 +187,33 @@
         </div>
 
         <!-- Step 3: Video Generation Progress -->
-        <div id="step3" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">Step 3: Generating Your 8-Second Scenes</h2>
+        <div id="step3" class="bg-gray-800 rounded-lg shadow-md p-6 mb-6 border border-gray-700 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-white">Step 3: Generating Your 8-Second Scenes</h2>
             
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium text-gray-700">Overall Progress</span>
-                    <span id="progressText" class="text-sm text-gray-500">0%</span>
+                    <span class="text-sm font-medium text-gray-300">Overall Progress</span>
+                    <span id="progressText" class="text-sm text-gray-400">0%</span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="w-full bg-gray-700 rounded-full h-2">
                     <div id="progressBar" class="bg-blue-600 h-2 rounded-full progress-bar" style="width: 0%"></div>
                 </div>
             </div>
             
             <div id="statusContainer" class="space-y-2">
-                <div id="status1" class="flex items-center text-gray-500">
+                <div id="status1" class="flex items-center text-gray-400">
                     <span class="loading mr-3 hidden"></span>
                     <span>Scene 1 (8 seconds): Waiting...</span>
                 </div>
-                <div id="status2" class="flex items-center text-gray-500">
+                <div id="status2" class="flex items-center text-gray-400">
                     <span class="loading mr-3 hidden"></span>
                     <span>Scene 2 (8 seconds): Waiting...</span>
                 </div>
-                <div id="status3" class="flex items-center text-gray-500">
+                <div id="status3" class="flex items-center text-gray-400">
                     <span class="loading mr-3 hidden"></span>
                     <span>Scene 3 (8 seconds): Waiting...</span>
                 </div>
-                <div id="statusConcat" class="flex items-center text-gray-500">
+                <div id="statusConcat" class="flex items-center text-gray-400">
                     <span class="loading mr-3 hidden"></span>
                     <span>Video concatenation: Waiting...</span>
                 </div>
@@ -222,8 +221,8 @@
         </div>
 
         <!-- Step 4: Results -->
-        <div id="step4" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-            <h2 class="text-2xl font-semibold mb-4">🎉 Your 24-Second Story is Ready!</h2>
+        <div id="step4" class="bg-gray-800 rounded-lg shadow-md p-6 mb-6 border border-gray-700 hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-white">🎉 Your 24-Second Story is Ready!</h2>
             
             <div class="text-center">
                 <video id="resultVideo" controls class="w-full max-w-md mx-auto mb-4 rounded-lg shadow-lg">
@@ -242,7 +241,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="text-center text-gray-500 text-sm mt-8">
+        <div class="text-center text-gray-400 text-sm mt-8">
             <p>Powered by Veo3 API • Built with ❤️ for storytellers</p>
             <p class="mt-1 text-xs">Featuring 8-second scenes with consistent environments, character continuity, and professional cinematography</p>
         </div>

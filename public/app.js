@@ -8,10 +8,7 @@ class Veo3StoryGenerator {
         this.currentScripts = [];
         this.currentCharacter = '';
         this.editingSceneIndex = -1;
-        this.availableModels = [];
-        this.selectedModel = 'anthropic/claude-3.5-sonnet';
         this.initializeEventListeners();
-        this.loadAvailableModels();
     }
 
     initializeEventListeners() {
@@ -25,45 +22,11 @@ class Veo3StoryGenerator {
         document.getElementById('backToEdit').addEventListener('click', this.backToStep1.bind(this));
         document.getElementById('confirmGenerate').addEventListener('click', this.generateVideos.bind(this));
         
-        // Prompt optimization
-        document.getElementById('optimizePrompts').addEventListener('click', this.optimizePrompts.bind(this));
-        
         // Step 4: Final actions
         document.getElementById('createAnother').addEventListener('click', this.reset.bind(this));
         
         // Listen for clicks on edit buttons (using event delegation)
         document.addEventListener('click', this.handleEditClick.bind(this));
-    }
-
-    async loadAvailableModels() {
-        try {
-            const response = await fetch('/api/openrouter-models');
-            const data = await response.json();
-            
-            if (data.success) {
-                this.availableModels = data.models;
-                this.populateModelSelect();
-            }
-        } catch (error) {
-            console.error('Error loading models:', error);
-            // Use default model if loading fails
-        }
-    }
-
-    populateModelSelect() {
-        const modelSelect = document.getElementById('optimizerModel');
-        if (modelSelect && this.availableModels.length > 0) {
-            modelSelect.innerHTML = '';
-            this.availableModels.forEach(model => {
-                const option = document.createElement('option');
-                option.value = model.id;
-                option.textContent = `${model.name} - ${model.description}`;
-                if (model.id === this.selectedModel) {
-                    option.selected = true;
-                }
-                modelSelect.appendChild(option);
-            });
-        }
     }
 
     handleCharacterChange(event) {
@@ -339,59 +302,6 @@ class Veo3StoryGenerator {
         setTimeout(() => {
             successMsg.remove();
         }, 5000);
-    }
-
-    async optimizePrompts() {
-        if (!this.currentScripts || this.currentScripts.length === 0) {
-            alert('No scripts available. Please generate scripts first.');
-            return;
-        }
-
-        // Get selected model
-        const modelSelect = document.getElementById('optimizerModel');
-        const selectedModel = modelSelect ? modelSelect.value : this.selectedModel;
-
-        const optimizeBtn = document.getElementById('optimizePrompts');
-        const originalText = optimizeBtn.textContent;
-        
-        try {
-            optimizeBtn.disabled = true;
-            optimizeBtn.innerHTML = `<span class="loading mr-2"></span>Optimizing with ${selectedModel}...`;
-            
-            const response = await fetch('/api/optimize-scene-prompts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    prompts: this.currentScripts,
-                    character: this.currentCharacter,
-                    model: selectedModel
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to optimize prompts');
-            }
-            
-            // Update current scripts with optimized versions
-            this.currentScripts = data.results.map(result => result.optimized);
-            
-            // Refresh the display
-            this.displayScripts(this.currentScripts);
-            
-            // Show success message
-            this.showSuccessMessage(`✅ Optimized ${data.optimizedCount}/${data.totalCount} prompts using Veo3 meta prompt guide!`);
-            
-        } catch (error) {
-            console.error('Error optimizing prompts:', error);
-            alert(`Error: ${error.message}`);
-        } finally {
-            optimizeBtn.disabled = false;
-            optimizeBtn.textContent = originalText;
-        }
     }
 
     backToStep1() {

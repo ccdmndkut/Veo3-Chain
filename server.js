@@ -41,6 +41,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Route for standalone prompt optimizer
+app.get('/prompt-optimizer', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'prompt-optimizer.html'));
+});
+
 // API endpoint to generate scene scripts
 app.post('/api/generate-scripts', async (req, res) => {
     try {
@@ -108,7 +113,7 @@ app.post('/api/generate-videos', async (req, res) => {
     }
 });
 
-// Initialize prompt optimizer
+// Initialize prompt optimizer for standalone feature
 const promptOptimizer = new PromptOptimizer();
 
 // API endpoint to get available OpenRouter models
@@ -128,10 +133,29 @@ app.get('/api/openrouter-models', (req, res) => {
     }
 });
 
-// API endpoint to optimize a single prompt
+// API endpoint to get the original system prompt
+app.get('/api/original-system-prompt', async (req, res) => {
+    try {
+        console.log('📖 Loading original system prompt...');
+        const systemPrompt = await promptOptimizer.getOriginalSystemPrompt();
+        console.log('✅ Original system prompt loaded successfully');
+        res.json({
+            success: true,
+            systemPrompt
+        });
+    } catch (error) {
+        console.error('❌ Error getting original system prompt:', error);
+        res.status(500).json({
+            error: 'Failed to get original system prompt',
+            details: error.message
+        });
+    }
+});
+
+// API endpoint to optimize a single prompt (standalone feature)
 app.post('/api/optimize-prompt', async (req, res) => {
     try {
-        const { prompt, character, context, model } = req.body;
+        const { prompt, character, context, model, image, systemPrompt, systemPromptMode } = req.body;
         
         if (!prompt) {
             return res.status(400).json({
@@ -139,9 +163,12 @@ app.post('/api/optimize-prompt', async (req, res) => {
             });
         }
 
-        console.log(`Optimizing prompt with model ${model || 'default'}: ${prompt.substring(0, 100)}...`);
+        const hasImage = image ? ' with image' : '';
+        const systemMode = systemPromptMode || 'default';
+        const hasCustomSystem = systemMode !== 'default' ? ` with ${systemMode} system prompt` : '';
+        console.log(`Optimizing prompt with model ${model || 'default'}${hasImage}${hasCustomSystem}: ${prompt.substring(0, 100)}...`);
         
-        const result = await promptOptimizer.optimizePrompt(prompt, character, context, model);
+        const result = await promptOptimizer.optimizePrompt(prompt, character, context, model, image, systemPrompt, systemPromptMode);
         
         res.json({
             success: true,
@@ -156,40 +183,10 @@ app.post('/api/optimize-prompt', async (req, res) => {
     }
 });
 
-// API endpoint to optimize multiple scene prompts
-app.post('/api/optimize-scene-prompts', async (req, res) => {
-    try {
-        const { prompts, character, model } = req.body;
-        
-        if (!prompts || !Array.isArray(prompts) || prompts.length === 0) {
-            return res.status(400).json({
-                error: 'Valid prompts array is required'
-            });
-        }
-
-        console.log(`Optimizing ${prompts.length} scene prompts for character: ${character} with model: ${model || 'default'}`);
-        
-        const results = await promptOptimizer.optimizeScenePrompts(prompts, character, model);
-        
-        res.json({
-            success: true,
-            results,
-            optimizedCount: results.filter(r => !r.error).length,
-            totalCount: results.length
-        });
-    } catch (error) {
-        console.error('Error optimizing scene prompts:', error);
-        res.status(500).json({
-            error: 'Failed to optimize scene prompts',
-            details: error.message
-        });
-    }
-});
-
-// API endpoint to get optimization suggestions
+// API endpoint to get optimization suggestions (standalone feature)
 app.post('/api/prompt-suggestions', async (req, res) => {
     try {
-        const { prompt, model } = req.body;
+        const { prompt, model, image, systemPrompt, systemPromptMode } = req.body;
         
         if (!prompt) {
             return res.status(400).json({
@@ -197,9 +194,12 @@ app.post('/api/prompt-suggestions', async (req, res) => {
             });
         }
 
-        console.log(`Generating suggestions for prompt with model ${model || 'default'}: ${prompt.substring(0, 100)}...`);
+        const hasImage = image ? ' with image' : '';
+        const systemMode = systemPromptMode || 'default';
+        const hasCustomSystem = systemMode !== 'default' ? ` with ${systemMode} system prompt` : '';
+        console.log(`Generating suggestions for prompt with model ${model || 'default'}${hasImage}${hasCustomSystem}: ${prompt.substring(0, 100)}...`);
         
-        const result = await promptOptimizer.generateOptimizationSuggestions(prompt, model);
+        const result = await promptOptimizer.generateOptimizationSuggestions(prompt, model, image, systemPrompt, systemPromptMode);
         
         res.json({
             success: true,
@@ -209,6 +209,36 @@ app.post('/api/prompt-suggestions', async (req, res) => {
         console.error('Error generating suggestions:', error);
         res.status(500).json({
             error: 'Failed to generate suggestions',
+            details: error.message
+        });
+    }
+});
+
+// API endpoint to generate prompt from image only (standalone feature)
+app.post('/api/generate-from-image', async (req, res) => {
+    try {
+        const { model, image, systemPrompt, systemPromptMode } = req.body;
+        
+        if (!image) {
+            return res.status(400).json({
+                error: 'Image is required'
+            });
+        }
+
+        const systemMode = systemPromptMode || 'default';
+        const hasCustomSystem = systemMode !== 'default' ? ` with ${systemMode} system prompt` : '';
+        console.log(`Generating prompt from image with model ${model || 'default'}${hasCustomSystem}`);
+        
+        const result = await promptOptimizer.generatePromptFromImage(model, image, systemPrompt, systemPromptMode);
+        
+        res.json({
+            success: true,
+            result
+        });
+    } catch (error) {
+        console.error('Error generating prompt from image:', error);
+        res.status(500).json({
+            error: 'Failed to generate prompt from image',
             details: error.message
         });
     }

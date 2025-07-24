@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veo3 Prompt Optimizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .veo3-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">🚀 Veo3 Prompt Optimizer</h1>
+            <p class="text-gray-300">Enhance your prompts using the Veo3 meta prompt guide with advanced AI models</p>
+            <div class="mt-4 flex justify-center gap-4 flex-wrap">
+                <span class="veo3-tag">OpenRouter Integration</span>
+                <span class="veo3-tag">Veo3 Meta Prompt Guide</span>
+                <span class="veo3-tag">Vision-Capable Models</span>
+                <span class="veo3-tag">Image Analysis</span>
+            </div>
+            <div class="mt-4">
+                <a href="/" class="text-blue-400 hover:text-blue-300 underline">← Back to Story Generator</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Input Prompt</h2>
+                
+                <!-- Model Selection -->
+                <div class="mb-4">
+                    <label for="modelSelect" class="block text-sm font-medium text-gray-300 mb-2">
+                        AI Model
+                    </label>
+                    <select
+                        id="modelSelect"
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                        <option value="anthropic/claude-3.5-sonnet">Loading models...</option>
+                    </select>
+                </div>
+
+                <!-- Character (Optional) -->
+                <div class="mb-4">
+                    <label for="characterInput" class="block text-sm font-medium text-gray-300 mb-2">
+                        Character (Optional)
+                    </label>
+                    <input
+                        id="characterInput"
+                        type="text"
+                        placeholder="e.g., wizard, detective, astronaut..."
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                    >
+                </div>
+
+                <!-- Prompt Input -->
+                <div class="mb-4">
+                    <label for="promptInput" class="block text-sm font-medium text-gray-300 mb-2">
+                        Your Prompt
+                    </label>
+                    <textarea
+                        id="promptInput"
+                        rows="6"
+                        placeholder="Enter your video prompt here... e.g., 'A wizard casting a spell in a mystical forest'"
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                    ></textarea>
+                </div>
+
+                <!-- Context (Optional) -->
+                <div class="mb-4">
+                    <label for="contextInput" class="block text-sm font-medium text-gray-300 mb-2">
+                        Additional Context (Optional)
+                    </label>
+                    <textarea
+                        id="contextInput"
+                        rows="3"
+                        placeholder="Any additional context or requirements..."
+                        class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                    ></textarea>
+                </div>
+
+                <!-- System Prompt (Advanced) -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-sm font-medium text-gray-300">
+                            System Prompt (Advanced)
+                        </label>
+                        <button
+                            id="toggleSystemPrompt"
+                            type="button"
+                            class="text-xs text-purple-400 hover:text-purple-300 underline"
+                        >
+                            Configure System Prompt
+                        </button>
+                    </div>
+                    <div id="systemPromptSection" class="hidden">
+                        <!-- System Prompt Mode Selection -->
+                        <div class="mb-3">
+                            <div class="flex gap-4 text-sm">
+                                <label class="flex items-center text-gray-300">
+                                    <input
+                                        type="radio"
+                                        name="systemPromptMode"
+                                        value="default"
+                                        id="systemPromptDefault"
+                                        checked
+                                        class="mr-2 text-purple-500 focus:ring-purple-500"
+                                    >
+                                    Use Default
+                                </label>
+                                <label class="flex items-center text-gray-300">
+                                    <input
+                                        type="radio"
+                                        name="systemPromptMode"
+                                        value="replace"
+                                        id="systemPromptReplace"
+                                        class="mr-2 text-purple-500 focus:ring-purple-500"
+                                    >
+                                    Replace
+                                </label>
+                                <label class="flex items-center text-gray-300">
+                                    <input
+                                        type="radio"
+                                        name="systemPromptMode"
+                                        value="append"
+                                        id="systemPromptAppend"
+                                        class="mr-2 text-purple-500 focus:ring-purple-500"
+                                    >
+                                    Append
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Original System Prompt Display (for append mode) -->
+                        <div id="originalSystemPromptDisplay" class="mb-3 hidden">
+                            <label class="block text-xs font-medium text-gray-400 mb-2">
+                                Original Veo3 Meta Prompt Guide (Read-only)
+                            </label>
+                            <div class="bg-gray-900 border border-gray-600 rounded-md p-3 max-h-32 overflow-y-auto">
+                                <p id="originalSystemPromptText" class="text-xs text-gray-400 whitespace-pre-wrap">Loading...</p>
+                            </div>
+                        </div>
+
+                        <!-- Custom System Prompt Input -->
+                        <div id="customSystemPromptInput" class="hidden">
+                            <label for="systemPromptInput" class="block text-xs font-medium text-gray-300 mb-2">
+                                <span id="systemPromptInputLabel">Custom System Prompt</span>
+                            </label>
+                            <textarea
+                                id="systemPromptInput"
+                                rows="8"
+                                placeholder="Enter custom system prompt..."
+                                class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400 text-sm"
+                            ></textarea>
+                        </div>
+
+                        <!-- Save/Load Custom Prompts -->
+                        <div id="customPromptActions" class="mb-3 hidden">
+                            <div class="flex gap-2 items-center">
+                                <input
+                                    type="text"
+                                    id="promptNameInput"
+                                    placeholder="Enter prompt name..."
+                                    class="flex-1 bg-gray-700 border border-gray-600 text-white rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-400"
+                                >
+                                <button
+                                    id="savePromptBtn"
+                                    type="button"
+                                    class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1 rounded transition duration-200"
+                                >
+                                    💾 Save
+                                </button>
+                                <select
+                                    id="savedPromptsSelect"
+                                    class="bg-gray-700 border border-gray-600 text-white rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-purple-500"
+                                >
+                                    <option value="">Load saved...</option>
+                                </select>
+                                <button
+                                    id="loadPromptBtn"
+                                    type="button"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded transition duration-200"
+                                >
+                                    📂 Load
+                                </button>
+                                <button
+                                    id="deletePromptBtn"
+                                    type="button"
+                                    class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded transition duration-200"
+                                >
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-2">
+                            <p id="systemPromptDescription" class="text-xs text-gray-500">
+                                Using default Veo3 meta prompt guide
+                            </p>
+                            <button
+                                id="resetSystemPrompt"
+                                type="button"
+                                class="text-xs text-gray-400 hover:text-gray-300 underline"
+                            >
+                                Reset to Default
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Upload (Vision Models Only) -->
+                <div class="mb-6" id="imageUploadSection">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Reference Image (Optional)
+                        <span class="text-xs text-purple-400" id="visionIndicator">- Vision models only</span>
+                    </label>
+                    <div class="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center hover:border-purple-500 transition-colors">
+                        <input
+                            type="file"
+                            id="imageInput"
+                            accept="image/*"
+                            class="hidden"
+                        >
+                        <div id="imageDropZone" class="cursor-pointer">
+                            <div id="imagePreview" class="hidden mb-4">
+                                <img id="previewImg" class="max-w-full max-h-48 mx-auto rounded-lg border border-gray-600">
+                                <button id="removeImage" class="mt-2 text-red-400 hover:text-red-300 text-sm">
+                                    🗑️ Remove Image
+                                </button>
+                            </div>
+                            <div id="uploadPrompt" class="text-gray-400">
+                                <div class="text-3xl mb-2">📸</div>
+                                <p class="text-sm">Click to upload or drag & drop an image</p>
+                                <p class="text-xs mt-1">Supports JPG, PNG, GIF, WebP (Max 10MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        Upload a reference image to help vision-capable models understand your prompt better.
+                        The AI will analyze the image and incorporate visual details into the optimization.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 flex-wrap">
+                    <button
+                        id="optimizeBtn"
+                        class="flex-1 gradient-bg text-white font-semibold py-3 px-6 rounded-lg transition duration-200 hover:opacity-90"
+                    >
+                        🚀 Optimize Prompt
+                    </button>
+                    <button
+                        id="suggestionsBtn"
+                        class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
+                    >
+                        💡 Get Suggestions
+                    </button>
+                    <button
+                        id="generateFromImageBtn"
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 mt-2"
+                        style="display: none;"
+                    >
+                        🎨 Generate Prompt from Image
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Optimized Result</h2>
+                
+                <div id="outputContainer" class="min-h-96">
+                    <div id="placeholderMessage" class="text-center text-gray-400 py-12">
+                        <div class="text-6xl mb-4">🎬</div>
+                        <p class="text-lg">Enter a prompt and click "Optimize Prompt" to get started</p>
+                        <p class="text-sm mt-2">Your optimized Veo3 prompt will appear here</p>
+                    </div>
+
+                    <!-- Optimized Prompt Display -->
+                    <div id="optimizedResult" class="hidden">
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-semibold text-lg text-white">Optimized Prompt</h3>
+                                <button id="copyBtn" class="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1 rounded transition duration-200">
+                                    📋 Copy
+                                </button>
+                            </div>
+                            <div class="bg-gray-700 border border-gray-600 rounded-lg p-4">
+                                <p id="optimizedText" class="text-gray-200 leading-relaxed whitespace-pre-wrap"></p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 text-sm text-gray-300">
+                            <div>
+                                <strong>Original Length:</strong> <span id="originalLength">-</span> chars
+                            </div>
+                            <div>
+                                <strong>Optimized Length:</strong> <span id="optimizedLength">-</span> chars
+                            </div>
+                            <div>
+                                <strong>Model Used:</strong> <span id="modelUsed">-</span>
+                            </div>
+                            <div>
+                                <strong>Generated:</strong> <span id="timestamp">-</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex gap-2">
+                            <button id="downloadBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded transition duration-200">
+                                📥 Download
+                            </button>
+                            <button id="clearBtn" class="bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded transition duration-200">
+                                🗑️ Clear
+                            </button>
+                            <button id="toggleHistoryBtn" class="bg-purple-600 hover:bg-purple-700 text-white text-sm px-4 py-2 rounded transition duration-200">
+                                📚 View History
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Suggestions Display -->
+                    <div id="suggestionsResult" class="hidden">
+                        <div class="mb-4">
+                            <h3 class="font-semibold text-lg mb-2 text-white">Optimization Suggestions</h3>
+                            <div class="bg-blue-900 border border-blue-700 rounded-lg p-4">
+                                <p id="suggestionsText" class="text-blue-100 leading-relaxed whitespace-pre-wrap"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div id="historySection" class="hidden mt-8 bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-white">
+                    Prompt History
+                    <span class="text-sm text-gray-400">(<span id="historyCount">0</span>/20)</span>
+                </h2>
+                <button id="clearHistoryBtn" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded transition duration-200">
+                    🗑️ Clear All History
+                </button>
+            </div>
+            
+            <div id="historyList" class="max-h-96 overflow-y-auto">
+                <!-- History items will be populated here -->
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="mt-8 bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700">
+            <h3 class="text-xl font-semibold mb-4 text-white">About Veo3 Prompt Optimization</h3>
+            <div class="grid md:grid-cols-3 gap-6 text-sm">
+                <div>
+                    <h4 class="font-semibold text-purple-400 mb-2">🎯 What it does</h4>
+                    <p class="text-gray-300">Uses the comprehensive Veo3 meta prompt guide to enhance your prompts with professional video generation techniques, including character consistency, camera movements, and audio specifications. Can also generate complete prompts from images alone.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-purple-400 mb-2">🤖 Vision-Capable AI Models</h4>
+                    <p class="text-gray-300">Choose from 13+ advanced AI models via OpenRouter, including vision-capable models like Claude 3.5 Sonnet, GPT-4o, Gemini Pro 1.5, Grok Vision, and Llama 3.2 Vision that can analyze reference images to enhance prompt optimization.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-purple-400 mb-2">📋 11-Component Framework</h4>
+                    <p class="text-gray-300">Applies the professional Veo3 format including Subject, Context, Action, Style, Camera, Mood, Dialogue, Sound Effects, Background Noise, Music, and Technical specifications.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-400 text-sm mt-8">
+            <p>Powered by OpenRouter & Veo3 Meta Prompt Guide • Built with ❤️ for creators</p>
+        </div>
+    </div>
+
+    <script src="/static/prompt-optimizer.js"></script>
+</body>
+</html>
