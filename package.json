@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/HenryAllen04/Veo3-Chain.git"
   },
-  "keywords": ["veo3", "video-generation", "ai", "story-generator"],
+  "keywords": [
+    "veo3",
+    "video-generation",
+    "ai",
+    "story-generator"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -22,6 +27,8 @@
   "homepage": "https://github.com/HenryAllen04/Veo3-Chain#readme",
   "dependencies": {
     "@fal-ai/client": "^1.1.2",
+    "@openrouter/ai-sdk-provider": "^0.7.3",
+    "ai": "^4.3.19",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

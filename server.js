@@ -12,6 +12,7 @@ require('dotenv').config();
 const { generateSceneScripts } = require('./src/scriptGenerator');
 const { generateVideo } = require('./src/videoGenerator');
 const { concatenateVideos } = require('./src/videoProcessor');
+const { PromptOptimizer } = require('./src/promptOptimizer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -103,6 +104,112 @@ app.post('/api/generate-videos', async (req, res) => {
         res.status(500).json({ 
             error: 'Failed to generate videos', 
             details: error.message 
+        });
+    }
+});
+
+// Initialize prompt optimizer
+const promptOptimizer = new PromptOptimizer();
+
+// API endpoint to get available OpenRouter models
+app.get('/api/openrouter-models', (req, res) => {
+    try {
+        const models = promptOptimizer.getAvailableModels();
+        res.json({
+            success: true,
+            models
+        });
+    } catch (error) {
+        console.error('Error getting models:', error);
+        res.status(500).json({
+            error: 'Failed to get available models',
+            details: error.message
+        });
+    }
+});
+
+// API endpoint to optimize a single prompt
+app.post('/api/optimize-prompt', async (req, res) => {
+    try {
+        const { prompt, character, context, model } = req.body;
+        
+        if (!prompt) {
+            return res.status(400).json({
+                error: 'Prompt is required'
+            });
+        }
+
+        console.log(`Optimizing prompt with model ${model || 'default'}: ${prompt.substring(0, 100)}...`);
+        
+        const result = await promptOptimizer.optimizePrompt(prompt, character, context, model);
+        
+        res.json({
+            success: true,
+            result
+        });
+    } catch (error) {
+        console.error('Error optimizing prompt:', error);
+        res.status(500).json({
+            error: 'Failed to optimize prompt',
+            details: error.message
+        });
+    }
+});
+
+// API endpoint to optimize multiple scene prompts
+app.post('/api/optimize-scene-prompts', async (req, res) => {
+    try {
+        const { prompts, character, model } = req.body;
+        
+        if (!prompts || !Array.isArray(prompts) || prompts.length === 0) {
+            return res.status(400).json({
+                error: 'Valid prompts array is required'
+            });
+        }
+
+        console.log(`Optimizing ${prompts.length} scene prompts for character: ${character} with model: ${model || 'default'}`);
+        
+        const results = await promptOptimizer.optimizeScenePrompts(prompts, character, model);
+        
+        res.json({
+            success: true,
+            results,
+            optimizedCount: results.filter(r => !r.error).length,
+            totalCount: results.length
+        });
+    } catch (error) {
+        console.error('Error optimizing scene prompts:', error);
+        res.status(500).json({
+            error: 'Failed to optimize scene prompts',
+            details: error.message
+        });
+    }
+});
+
+// API endpoint to get optimization suggestions
+app.post('/api/prompt-suggestions', async (req, res) => {
+    try {
+        const { prompt, model } = req.body;
+        
+        if (!prompt) {
+            return res.status(400).json({
+                error: 'Prompt is required'
+            });
+        }
+
+        console.log(`Generating suggestions for prompt with model ${model || 'default'}: ${prompt.substring(0, 100)}...`);
+        
+        const result = await promptOptimizer.generateOptimizationSuggestions(prompt, model);
+        
+        res.json({
+            success: true,
+            result
+        });
+    } catch (error) {
+        console.error('Error generating suggestions:', error);
+        res.status(500).json({
+            error: 'Failed to generate suggestions',
+            details: error.message
         });
     }
 });

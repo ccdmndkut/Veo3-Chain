@@ -147,15 +147,39 @@
                 </p>
             </div>
             
-            <div class="flex gap-4">
-                <button 
-                    id="confirmGenerate" 
+            <div class="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <h3 class="text-lg font-semibold text-purple-800 mb-2">🚀 OpenRouter Optimization</h3>
+                <p class="text-purple-700 text-sm mb-3">
+                    Enhance your prompts using the Veo3 meta prompt guide with advanced AI models from OpenRouter.
+                </p>
+                <div class="flex items-center gap-3">
+                    <label for="optimizerModel" class="text-sm font-medium text-purple-700">
+                        Select Model:
+                    </label>
+                    <select
+                        id="optimizerModel"
+                        class="flex-1 border border-purple-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                        <option value="anthropic/claude-3.5-sonnet">Loading models...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 flex-wrap">
+                <button
+                    id="optimizePrompts"
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+                >
+                    🚀 Optimize with OpenRouter
+                </button>
+                <button
+                    id="confirmGenerate"
                     class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
                 >
                     ⚡ Confirm & Generate Videos (~$12)
                 </button>
-                <button 
-                    id="backToEdit" 
+                <button
+                    id="backToEdit"
                     class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
                 >
                     ← Back to Edit
